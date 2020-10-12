@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name=”viewport” content=”width=device-width,initial-scale=1.0″>
+    <title>My English Wordbook</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link type="text/css" rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.datatables.net/v/dt/dt-1.10.22/datatables.min.css"/>
+    <link type="text/css" rel="stylesheet" href="./static/css/component.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.22/datatables.min.js"></script>
+    <script type="text/javascript" src="./static/js/html2canvas.js"></script>
+    <script type="module">
+        import {{ Header, Footer, Dashboard }} from './static/js/main.js'
+        document.addEventListener('DOMContentLoaded', () => {{
+            const body = document.getElementById('body');
+            new Header(body);
+            new Dashboard({dashboardData});
+            new Footer(body);
+        }})
+    </script>
+</head>
+
+<body id="body">
+    <main id="main"></main>
+</body>
+
+</html>
