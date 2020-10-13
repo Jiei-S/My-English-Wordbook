@@ -148,7 +148,7 @@ class Validate:
         """
         try:
             return json.loads(req_data)
-        except json.JSONDecodeError as err:
+        except (TypeError, json.JSONDecodeError) as err:
             raise ValueError(err)
 
     def _validate(func):
@@ -161,7 +161,7 @@ class Validate:
         def __validate(*args):
             try:
                 return func(*args)
-            except (KeyError, IndexError, ValueError) as err:
+            except (KeyError, TypeError, ValueError) as err:
                 raise ValueError(err)
         return __validate
 
