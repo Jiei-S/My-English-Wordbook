@@ -2,6 +2,7 @@
 
 api.py
 """
+from datetime import date, timedelta
 import json
 import os
 import pytest
@@ -9,6 +10,8 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from module import api
+from module import dbaccess
+from module import util
 
 
 class TestResponseBase(object):
@@ -69,7 +72,7 @@ class TestHtmlResponse(object):
     def test_content_type_001(self):
         """コンテンツタイプ
         正常ケース
-        
+
         in:
           'text/html'
         expect:
@@ -148,7 +151,7 @@ class TestJsonResponse(object):
     def test_content_type_001(self):
         """コンテンツタイプ
         正常ケース
-        
+
         in:
           'application/json'
         expect:
@@ -464,3 +467,210 @@ class TestDashboardView(object):
             'activitys': expect_select_activity_order_by_desc_limit_5,
             'learningLog': expect_select_count_learning_date
         }))
+
+    def test_open_html_file_001(self):
+        """HTML読み込み
+        正常ケース
+
+        in:
+          index.html
+        expect:
+          HTMLコード
+        """
+        with open('index.html', 'r') as file:
+            assert self.inst._open_html_file() == file.read()
+
+    def test_count_num_001(self, monkeypatch):
+        """登録単語数、習得済み単語数、ブックマーク数カウント
+        正常ケース
+
+        in:
+          {
+            'wordTotal': 1000,
+            'isCorrectTotal': 100,
+            'bookmarkTotal': 1,
+          }
+        expect:
+          {
+            'wordTotal': 1000,
+            'isCorrectTotal': 100,
+            'bookmarkTotal': 1,
+          }
+        """
+        def mock_count_all(self):
+            return 1000
+
+        def mock_count_is_correct(self):
+            return 100
+
+        def mock_count_bookmark(self):
+            return 1
+
+        monkeypatch.setattr(dbaccess.Word, 'count_all', mock_count_all)
+        monkeypatch.setattr(dbaccess.Word, 'count_is_correct', mock_count_is_correct)
+        monkeypatch.setattr(dbaccess.Word, 'count_bookmark', mock_count_bookmark)
+        assert self.inst._count_num() == {
+            'wordTotal': 1000,
+            'isCorrectTotal': 100,
+            'bookmarkTotal': 1,
+        }
+
+    def test_select_activity_order_by_desc_limit_5_001(self, monkeypatch):
+        """アクティビティ5件取得
+        正常ケース
+
+        in:
+          [
+            {
+              'type': 0,
+              'detail': '英語を習得しました'
+            },
+            {
+              'type': 1,
+              'detail': '英語を登録しました'
+            },
+            {
+              'type': 2,
+              'detail': '英語を削除しました'
+            },
+            {
+              'type': 3,
+              'detail': 'ブックマークを登録しました'
+            },
+            {
+              'type': 4,
+              'detail': 'ブックマークを解除しました'
+            },
+          ]
+        expect:
+          [
+            {
+              'type': 'learning',
+              'detail': '英語を習得しました'
+            },
+            {
+              'type': 'english_list',
+              'detail': '英語を登録しました'
+            },
+            {
+              'type': 'english_list',
+              'detail': '英語を削除しました'
+            },
+            {
+              'type': 'bookmark',
+              'detail': 'ブックマークを登録しました'
+            },
+            {
+              'type': 'bookmark',
+              'detail': 'ブックマークを解除しました'
+            },
+          ]
+        """
+        def mock_select_activity_order_by_desc_limit_5(self):
+            return [
+                {
+                    'type': 0,
+                    'detail': '英語を習得しました'
+                },
+                {
+                    'type': 1,
+                    'detail': '英語を登録しました'
+                },
+                {
+                    'type': 2,
+                    'detail': '英語を削除しました'
+                },
+                {
+                    'type': 3,
+                    'detail': 'ブックマークを登録しました'
+                },
+                {
+                    'type': 4,
+                    'detail': 'ブックマークを解除しました'
+                },
+            ]
+
+        monkeypatch.setattr(
+            dbaccess.Activity,
+            'select_activity_order_by_desc_limit_5',
+            mock_select_activity_order_by_desc_limit_5
+        )
+        assert self.inst._select_activity_order_by_desc_limit_5() == [
+            {
+                'type': 'learning',
+                'detail': '英語を習得しました'
+            },
+            {
+                'type': 'english_list',
+                'detail': '英語を登録しました'
+            },
+            {
+                'type': 'english_list',
+                'detail': '英語を削除しました'
+            },
+            {
+                'type': 'bookmark',
+                'detail': 'ブックマークを登録しました'
+            },
+            {
+                'type': 'bookmark',
+                'detail': 'ブックマークを解除しました'
+            },
+        ]
+
+    def test_select_count_learning_date_001(self, monkeypatch):
+        """習得ログ取得
+        正常ケース
+
+        in:
+          [
+            {
+              'count': 0,
+              'date': datetime.date.today()
+            },
+            {
+              'count': 1,
+              'date': datetime.date.today()
+            },
+          ]
+        expect:
+          [
+            {
+              'count': 0,
+              'date': datetime.date.today().strftime('%Y/%m/%d')
+            },
+            {
+              'count': 1,
+              'date': datetime.date.today().strftime('%Y/%m/%d')
+            },
+          ]
+        """
+        from_date = date.today() - timedelta(days=7)
+        to_date = date.today()
+        def mock_select_count_learning_date(self, from_date, to_date):
+            return [
+                {
+                    'count': 0,
+                    'date': from_date
+                },
+                {
+                    'count': 1,
+                    'date': from_date
+                },
+            ]
+
+        monkeypatch.setattr(
+            dbaccess.Activity,
+            'select_count_learning_date',
+            mock_select_count_learning_date
+        )
+        assert self.inst._select_count_learning_date() == [
+            {
+                'count': 0,
+                'date': from_date.strftime('%Y/%m/%d')
+            },
+            {
+                'count': 1,
+                'date': from_date.strftime('%Y/%m/%d')
+            },
+        ]

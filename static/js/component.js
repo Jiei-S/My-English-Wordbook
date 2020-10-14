@@ -12,6 +12,9 @@ const FLAG = {
 
 
 const MAX_WORD_SIZE = 256;
+const COMMON_TEXT = {
+  NOT_EXIST_DATA: 'データがありません',
+};
 
 
 /**
@@ -40,7 +43,7 @@ const createWrap = ({ id = null, classNames = null, innerElm }) => {
  * @param {String} id セクションID
  * @param {Array} classNames セクションクラス名
  * @param {Array} innerElm インナー要素
- * @return {Element} セクション
+ * @return {Element} section セクション
  */
 const createSection = ({ id = null, classNames = null, innerElm }) => {
   const section = document.createElement('section');
@@ -51,6 +54,24 @@ const createSection = ({ id = null, classNames = null, innerElm }) => {
   }
   innerElm.forEach(elm => section.appendChild(elm));
   return section;
+};
+
+
+/**
+ * エラーメッセージ生成
+ * 
+ * @param {String} text メッセージ
+ * @return {Element} errorMsg エラーメッセージ
+ */
+const createErrorMsg = ({ classNames = null, text = null }) => {
+  const errorMsg = document.createElement('div');
+
+  errorMsg.classList.add('error-msg');
+  if (classNames) {
+    errorMsg.classList.add(...classNames);
+  }
+  errorMsg.textContent = text ? text : '';
+  return errorMsg;
 };
 
 
@@ -117,8 +138,10 @@ const pronounceEnglish = (english) => {
 export const util = {
   FLAG,
   MAX_WORD_SIZE,
+  COMMON_TEXT,
   createWrap,
   createSection,
+  createErrorMsg,
   appendMultipleChild,
   createDocumentFragment,
   httpRequest,

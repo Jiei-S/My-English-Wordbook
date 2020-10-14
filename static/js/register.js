@@ -150,7 +150,6 @@ class RegisterForm {
         }
       },
     ];
-    this._registerFormElm = this._create();
   }
 
   /**
@@ -159,7 +158,7 @@ class RegisterForm {
    * @return {Element} 登録フォーム
    */
   get component() {
-    return this._registerFormElm;
+    return this._create();
   }
 
   /**
@@ -202,7 +201,6 @@ class RegisterForm {
    */
   _createInputTextField({ id = null, classNames = null, validate = null }) {
     const input = document.createElement('input');
-    const errorMsg = document.createElement('div');
 
     input.type = 'text';
     input.id = id || '';
@@ -210,10 +208,9 @@ class RegisterForm {
     if (classNames) {
       input.classList.add(...classNames);
     }
-    errorMsg.classList.add('error-msg');
     return util.createDocumentFragment([
       input,
-      errorMsg
+      util.createErrorMsg()
     ]);
   }
 

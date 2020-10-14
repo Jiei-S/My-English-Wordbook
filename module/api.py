@@ -231,7 +231,7 @@ class DashboardView:
     def __init__(self):
         """コンストラクタ
         """
-        self._body = self.__open_html_file()
+        self._body = self._open_html_file()
         self._db_word = Word()
         self._db_activity = Activity()
 
@@ -250,7 +250,7 @@ class DashboardView:
         }
         return HtmlResponse(self._body.format(dashboardData=json.dumps(dashboard_data)))
 
-    def __open_html_file(self):
+    def _open_html_file(self):
         """HTML読み込み
 
         @return ファイルの内容
@@ -277,12 +277,15 @@ class DashboardView:
         """アクティビティ5件取得
 
         @return アクティビティ5件
-        @retval type_flag アクティビティ種別
+        @retval type アクティビティ種別
         @retval detail アクティビティ詳細
         """
         rows = self._db_activity.select_activity_order_by_desc_limit_5()
         for row in rows:
-            row['type_flag'] = convert_to_activity_type_for_display(row['type'])
+            try:
+                row['type'] = convert_to_activity_type_for_display(row['type'])
+            except (KeyError, TypeError, IndexError):
+                continue
         return rows
 
     @db_operation
@@ -298,7 +301,10 @@ class DashboardView:
             to_date=TODAY
         )
         for row in rows:
-            row['date'] = convert_to_date_for_display(row['date'])
+            try:
+                row['date'] = convert_to_date_for_display(row['date'])
+            except KeyError:
+                continue
         return rows
 
 
