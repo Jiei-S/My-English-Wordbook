@@ -361,7 +361,7 @@ class LearningView:
         @retval bookmark_flag 論理値
         """
         data = []
-        for _, correct in enumerate(corrects):
+        for correct in corrects:
             incorrects_list = []
 
             while True:
@@ -467,13 +467,16 @@ class ActivityView:
 
         @return アクティビティ一覧データ
         @retval date アクティビティ日付
-        @retval type_flag アクティビティ種別
+        @retval type アクティビティ種別
         @retval detail アクティビティ詳細
         """
         rows = self._db_activity.select_all()
         for row in rows:
-            row['date'] = convert_to_date_for_display(row['date'])
-            row['type_flag'] = convert_to_activity_type_for_display(row['type'])
+            try:
+                row['date'] = convert_to_date_for_display(row['date'])
+                row['type'] = convert_to_activity_type_for_display(row['type'])
+            except (KeyError, TypeError, IndexError):
+                continue
         return rows
 
 

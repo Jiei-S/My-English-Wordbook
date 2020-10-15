@@ -33,7 +33,7 @@ class TestResponseBase(object):
     def test_content_type_001(self):
         """コンテンツタイプ
         正常ケース
-        
+
         in:
           'application/json'
         expect:
@@ -111,7 +111,7 @@ class TestStaticResponse(object):
     def test_content_type_001(self):
         """コンテンツタイプ
         正常ケース
-        
+
         in:
           'text/javascript'
         expect:
@@ -413,11 +413,25 @@ class TestDashboardView(object):
         正常ケース
 
         expect:
-          {
-            'wordTotal': 1000,
-            'isCorrectTotal': 100,
-            'bookmarkTotal': 10,
-          }
+          '{
+            "count": {
+              "wordTotal": 1000,
+              "isCorrectTotal": 100,
+              "bookmarkTotal": 10,
+            },
+            "activitys": [
+              {
+                "type_flag": "learning",
+                "detail": "英語を習得しました"
+              }
+            ],
+            "learningLog": [
+              {
+                "count": 10,
+                "date": "2020/10/01"
+              }
+            ],
+          }'
         """
         expect_count_num = {
             'wordTotal': 1000,
@@ -672,5 +686,565 @@ class TestDashboardView(object):
             {
                 'count': 1,
                 'date': from_date.strftime('%Y/%m/%d')
+            },
+        ]
+
+
+class TestLearningView(object):
+    """ 学習画面 """
+
+    def setup(self):
+        self.inst = api.LearningView()
+
+    def test_view_001(self, monkeypatch):
+        """レスポンス
+        正常ケース
+
+        expect:
+          '[
+            {
+              "id': 1,
+              "english": "english",
+              "correct": "日本語",
+              "incorrect_1": "日本語_1'",
+              "incorrect_2": "日本語_2",
+              "incorrect_3": "日本語_3",
+              "bookmark_flag": "TRUE"
+            },
+            {
+              "id': 2,
+              "english": "english",
+              "correct": "日本語",
+              "incorrect_1": "日本語_1'",
+              "incorrect_2": "日本語_2",
+              "incorrect_3": "日本語_3",
+              "bookmark_flag": "TRUE"
+            },
+          ]'
+
+        """
+        expect_select_learning = [
+            {
+                'id': 1,
+                'english': 'english',
+                'correct': '日本語',
+                'incorrect_1': '日本語_1',
+                'incorrect_2': '日本語_2',
+                'incorrect_3': '日本語_3',
+                'bookmark_flag': 'TRUE'
+            },
+            {
+                'id': 2,
+                'english': 'english',
+                'correct': '日本語',
+                'incorrect_1': '日本語_1',
+                'incorrect_2': '日本語_2',
+                'incorrect_3': '日本語_3',
+                'bookmark_flag': 'TRUE'
+            },
+        ]
+        def mock_select_learning():
+            return expect_select_learning
+
+        monkeypatch.setattr(self.inst, '_select_learning', mock_select_learning)
+        result = self.inst.view()
+
+        assert isinstance(result, api.JsonResponse)
+        assert result.status == '200 OK'
+        assert result.content_type == 'application/json'
+        assert result.body == json.dumps(expect_select_learning)
+
+    def test_select_learning_001(self, monkeypatch):
+        """学習データ取得
+        正常ケース
+
+        in_01:
+          [
+            {
+              'id': 1,
+              'english': 'english',
+              'japanese': '日本語',
+              'bookmark': 'TRUE'
+            },
+          ]
+        im_02:
+          [['日本語_1']]
+        expect:
+          [
+            {
+              'id': 1,
+              'english': 'english',
+              'correct': '日本語',
+              'incorrect_1': '日本語_1',
+              'incorrect_2': '日本語_1',
+              'incorrect_3': '日本語_1',
+              'bookmark_flag': 'TRUE'
+            },
+          ]
+        """
+        def mock_select_learning(self):
+            return [
+                {
+                    'id': 1,
+                    'english': 'english',
+                    'japanese': '日本語',
+                    'bookmark': 'TRUE'
+                },
+            ]
+
+        def mock_select_incorrect(self):
+            return [['日本語_1']]
+
+        monkeypatch.setattr(dbaccess.Word, 'select_learning', mock_select_learning)
+        monkeypatch.setattr(dbaccess.Word, 'select_incorrect', mock_select_incorrect)
+        assert self.inst._select_learning() == [
+            {
+                'id': 1,
+                'english': 'english',
+                'correct': '日本語',
+                'incorrect_1': '日本語_1',
+                'incorrect_2': '日本語_1',
+                'incorrect_3': '日本語_1',
+                'bookmark_flag': 'TRUE'
+            },
+        ]
+
+    @pytest.mark.parametrize('input_01, input_02, expect', [
+        (
+            [
+                {
+                    'id': 1,
+                    'english': 'english',
+                    'japanese': '日本語',
+                    'bookmark': 'TRUE'
+                },
+            ],
+            [
+                ['日本語_1'],
+            ],
+            [
+                {
+                    'id': 1,
+                    'english': 'english',
+                    'correct': '日本語',
+                    'incorrect_1': '日本語_1',
+                    'incorrect_2': '日本語_1',
+                    'incorrect_3': '日本語_1',
+                    'bookmark_flag': 'TRUE'
+                },
+            ]
+        ),
+        (
+            [],
+            [],
+            []
+        ),
+    ])
+    def test_convert_to_learning_for_display_001(self, input_01, input_02, expect):
+        """学習データを表示用に変換
+        正常ケース
+
+        in_01:
+          [
+            {
+              'id': 1,
+              'english': 'english',
+              'japanese': '日本語',
+              'bookmark': 'TRUE'
+            },
+          ]
+        im_02:
+          [['日本語_1']]
+        expect:
+          [
+            {
+              'id': 1,
+              'english': 'english',
+              'correct': '日本語',
+              'incorrect_1': '日本語_1',
+              'incorrect_2': '日本語_1',
+              'incorrect_3': '日本語_1',
+              'bookmark_flag': 'TRUE'
+            },
+          ]
+        in_01:
+          []
+        im_02:
+          []
+        expect:
+          []
+        """
+        assert self.inst._convert_to_learning_for_display(input_01, input_02) ==\
+            expect
+
+
+class TestEnglishListView(object):
+    """ 単語一覧画面 """
+
+    def setup(self):
+        self.inst = api.EnglishListView()
+
+    def test_view_001(self, monkeypatch):
+        """レスポンス
+        正常ケース
+
+        expect:
+          '[
+            {
+              "id': 1,
+              "english": "english",
+              "japanese": "日本語",
+              'is_correct': 'TRUE'
+            },
+            {
+              "id': 2,
+              "english": "english",
+              "japanese": "日本語",
+              'is_correct': 'TRUE'
+            },
+          ]'
+
+        """
+        expect_select_english_list = [
+            {
+                'id': 1,
+                'english': 'english',
+                'japanese': '日本語',
+                'is_correct': 'TRUE'
+            },
+            {
+                'id': 2,
+                'english': 'english',
+                'japanese': '日本語',
+                'is_correct': 'TRUE'
+            },
+        ]
+        def mock_select_english_list():
+            return expect_select_english_list
+
+        monkeypatch.setattr(self.inst, '_select_english_list', mock_select_english_list)
+        result = self.inst.view()
+
+        assert isinstance(result, api.JsonResponse)
+        assert result.status == '200 OK'
+        assert result.content_type == 'application/json'
+        assert result.body == json.dumps(expect_select_english_list)
+
+    def test_select_english_list_001(self, monkeypatch):
+        """単語一覧データ取得
+        正常ケース
+
+        in:
+          [
+            {
+              'id': 1,
+              'english': 'english',
+              'japanese': '日本語',
+              'is_correct': 'TRUE'
+            },
+            {
+              'id': 2,
+              'english': 'english',
+              'japanese': '日本語',
+              'is_correct': 'FALSE'
+            },
+          ]
+        expect:
+          [
+            {
+              'id': 1,
+              'english': 'english',
+              'japanese': '日本語',
+              'is_correct': 'TRUE'
+            },
+            {
+              'id': 2,
+              'english': 'english',
+              'japanese': '日本語',
+              'is_correct': 'FALSE'
+            },
+          ]
+        """
+        expect_select_english_list = [
+            {
+                'id': 1,
+                'english': 'english',
+                'japanese': '日本語',
+                'is_correct': 'TRUE'
+            },
+            {
+                'id': 2,
+                'english': 'english',
+                'japanese': '日本語',
+                'is_correct': 'FALSE'
+            },
+        ]
+        def mock_select_english_list(self):
+            return expect_select_english_list
+
+        monkeypatch.setattr(
+            dbaccess.Word,
+            'select_english_list',
+            mock_select_english_list
+        )
+        assert self.inst._select_english_list() == expect_select_english_list
+
+
+class TestBookMarkView(object):
+    """ ブックマーク画面 """
+
+    def setup(self):
+        self.inst = api.BookMarkView()
+
+    def test_view_001(self, monkeypatch):
+        """レスポンス
+        正常ケース
+
+        expect:
+          '[
+            {
+              "id': 1,
+              "english": "english",
+              "japanese": "日本語",
+            },
+            {
+              "id': 2,
+              "english": "english",
+              "japanese": "日本語",
+            },
+          ]'
+
+        """
+        expect_select_bookmark = [
+            {
+                'id': 1,
+                'english': 'english',
+                'japanese': '日本語',
+            },
+            {
+                'id': 2,
+                'english': 'english',
+                'japanese': '日本語',
+            },
+        ]
+        def mock_select_bookmark():
+            return expect_select_bookmark
+
+        monkeypatch.setattr(self.inst, '_select_bookmark', mock_select_bookmark)
+        result = self.inst.view()
+
+        assert isinstance(result, api.JsonResponse)
+        assert result.status == '200 OK'
+        assert result.content_type == 'application/json'
+        assert result.body == json.dumps(expect_select_bookmark)
+
+    def test_select_bookmark_001(self, monkeypatch):
+        """ブックマークデータ取得
+        正常ケース
+
+        in:
+          [
+            {
+              'id': 1,
+              'english': 'english',
+              'japanese': '日本語',
+            },
+            {
+              'id': 2,
+              'english': 'english',
+              'japanese': '日本語',
+            },
+          ]
+        expect:
+          [
+            {
+              'id': 1,
+              'english': 'english',
+              'japanese': '日本語',
+            },
+            {
+              'id': 2,
+              'english': 'english',
+              'japanese': '日本語',
+            },
+          ]
+        """
+        expect_select_bookmark = [
+            {
+                'id': 1,
+                'english': 'english',
+                'japanese': '日本語',
+            },
+            {
+                'id': 2,
+                'english': 'english',
+                'japanese': '日本語',
+            },
+        ]
+        def mock_select_bookmark(self):
+            return expect_select_bookmark
+
+        monkeypatch.setattr(
+            dbaccess.Word,
+            'select_bookmark',
+            mock_select_bookmark
+        )
+        assert self.inst._select_bookmark() == expect_select_bookmark
+
+
+class TestActivityView(object):
+    """ アクティビティ一覧画面 """
+    def setup(self):
+        self.inst = api.ActivityView()
+
+    def test_view_001(self, monkeypatch):
+        """レスポンス
+        正常ケース
+
+        expect:
+          [
+            {
+              'date': '2020/10/01',
+              'type_flag': 'learning',
+              'detail': '英語を習得しました'
+            }
+          ]
+        """
+        expect_select_all = [
+            {
+                'date': '2020/10/01',
+                'type_flag': 'learning',
+                'detail': '英語を習得しました'
+            }
+        ]
+
+        def mock_select_all():
+            return expect_select_all
+
+        monkeypatch.setattr(self.inst, '_select_all', mock_select_all)
+        result = self.inst.view()
+
+        assert isinstance(result, api.JsonResponse)
+        assert result.status == '200 OK'
+        assert result.content_type == 'application/json'
+        assert result.body == json.dumps(expect_select_all)
+
+    def test_select_all_001(self, monkeypatch):
+        """アクティビティ一覧データ取得
+        正常ケース
+
+        in:
+          [
+            {
+              'date': datetime.date.today()
+              'type': 0,
+              'detail': '英語を習得しました'
+            },
+            {
+              'date': datetime.date.today()
+              'type': 1,
+              'detail': '英語を登録しました'
+            },
+            {
+              'date': datetime.date.today()
+              'type': 2,
+              'detail': '英語を削除しました'
+            },
+            {
+              'date': datetime.date.today()
+              'type': 3,
+              'detail': 'ブックマークを登録しました'
+            },
+            {
+              'date': datetime.date.today()
+              'type': 4,
+              'detail': 'ブックマークを解除しました'
+            },
+          ]
+        expect:
+          [
+            {
+              'date': datetime.date.today().strftime('%Y/%m/%d')
+              'type': 'learning',
+              'detail': '英語を習得しました'
+            },
+            {
+              'date': datetime.date.today().strftime('%Y/%m/%d')
+              'type': 'english_list',
+              'detail': '英語を登録しました'
+            },
+            {
+              'date': datetime.date.today().strftime('%Y/%m/%d')
+              'type': 'english_list',
+              'detail': '英語を削除しました'
+            },
+            {
+              'date': datetime.date.today().strftime('%Y/%m/%d')
+              'type': 'bookmark',
+              'detail': 'ブックマークを登録しました'
+            },
+            {
+              'date': datetime.date.today().strftime('%Y/%m/%d')
+              'type': 'bookmark',
+              'detail': 'ブックマークを解除しました'
+            },
+          ]
+        """
+        _date = date.today()
+        def mock_select_all(self):
+            return [
+                {
+                    'date': _date,
+                    'type': 0,
+                    'detail': '英語を習得しました'
+                },
+                {
+                    'date': _date,
+                    'type': 1,
+                    'detail': '英語を登録しました'
+                },
+                {
+                    'date': _date,
+                    'type': 2,
+                    'detail': '英語を削除しました'
+                },
+                {
+                    'date': _date,
+                    'type': 3,
+                    'detail': 'ブックマークを登録しました'
+                },
+                {
+                    'date': _date,
+                    'type': 4,
+                    'detail': 'ブックマークを解除しました'
+                },
+            ]
+
+        monkeypatch.setattr(dbaccess.Activity, 'select_all', mock_select_all)
+        assert self.inst._select_all() == [
+            {
+                'date': _date.strftime('%Y/%m/%d'),
+                'type': 'learning',
+                'detail': '英語を習得しました'
+            },
+            {
+                'date': _date.strftime('%Y/%m/%d'),
+                'type': 'english_list',
+                'detail': '英語を登録しました'
+            },
+            {
+                'date': _date.strftime('%Y/%m/%d'),
+                'type': 'english_list',
+                'detail': '英語を削除しました'
+            },
+            {
+                'date': _date.strftime('%Y/%m/%d'),
+                'type': 'bookmark',
+                'detail': 'ブックマークを登録しました'
+            },
+            {
+                'date': _date.strftime('%Y/%m/%d'),
+                'type': 'bookmark',
+                'detail': 'ブックマークを解除しました'
             },
         ]

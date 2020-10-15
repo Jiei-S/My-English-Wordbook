@@ -63,10 +63,10 @@ class ActivityTable {
               let elm = `<div class="d-flex align-items-center activityTable-detail-wrap">`;
 
               MENUS.forEach(menu => {
-                if (menu.getComponentName() === data.type_flag) {
+                if (menu.getComponentName() === data.type) {
                   const [a, b] = menu.iconClassNames;
 
-                  elm += `<div class="${data.type_flag}"><i class="${a} ${b}"></i></div>`;
+                  elm += `<div class="${data.type}"><i class="${a} ${b}"></i></div>`;
                   return false;
                 }
                 return true;
