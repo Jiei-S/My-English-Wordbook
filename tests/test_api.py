@@ -1250,49 +1250,6 @@ class TestActivityView(object):
         ]
 
 
-class DbWord:
-    """ テスト用データベース """
-    def __init__(self):
-        self.last_pkey = 0
-        self.rows = {
-            'pkey': None,
-            'english': None,
-            'japanese': None,
-            'is_correct': 'FALSE',
-            'bookmark': 'FALSE'
-        }
-
-    def insert(self, pkey=None, english=None, japanese=None):
-        self.last_pkey += 1
-        self.rows[self.last_pkey] = {
-            'pkey': self.last_pkey,
-            'english': english,
-            'japanese': japanese,
-        }
-
-    def update_is_correct(self, pkey, flag):
-        self.last_pkey += 1
-        self.rows[self.last_pkey] = {
-            'pkey': self.last_pkey,
-            'is_correct': flag,
-        }
-        return self.rows['english']
-
-    def update_bookmark(self, pkey, flag):
-        self.last_pkey += 1
-        self.rows[self.last_pkey] = {
-            'pkey': self.last_pkey,
-            'bookmark': flag,
-        }
-        return self.rows['english']
-
-    def delete(self, pkey):
-        self.last_pkey += 1
-        ebg_val = self.rows['english']
-        del self.rows
-        return ebg_val
-
-
 class TestUpdateIsCorrectFlagView(object):
     """ is_correctフラグ更新 """
     def setup(self):
