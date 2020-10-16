@@ -767,7 +767,7 @@ class TestLearningView(object):
               'bookmark': 'TRUE'
             },
           ]
-        im_02:
+        in_02:
           [['日本語_1']]
         expect:
           [
@@ -1248,3 +1248,300 @@ class TestActivityView(object):
                 'detail': 'ブックマークを解除しました'
             },
         ]
+
+
+class DbWord:
+    """ テスト用データベース """
+    def __init__(self):
+        self.last_pkey = 0
+        self.rows = {
+            'pkey': None,
+            'english': None,
+            'japanese': None,
+            'is_correct': 'FALSE',
+            'bookmark': 'FALSE'
+        }
+
+    def insert(self, pkey=None, english=None, japanese=None):
+        self.last_pkey += 1
+        self.rows[self.last_pkey] = {
+            'pkey': self.last_pkey,
+            'english': english,
+            'japanese': japanese,
+        }
+
+    def update_is_correct(self, pkey, flag):
+        self.last_pkey += 1
+        self.rows[self.last_pkey] = {
+            'pkey': self.last_pkey,
+            'is_correct': flag,
+        }
+        return self.rows['english']
+
+    def update_bookmark(self, pkey, flag):
+        self.last_pkey += 1
+        self.rows[self.last_pkey] = {
+            'pkey': self.last_pkey,
+            'bookmark': flag,
+        }
+        return self.rows['english']
+
+    def delete(self, pkey):
+        self.last_pkey += 1
+        ebg_val = self.rows['english']
+        del self.rows
+        return ebg_val
+
+
+class TestUpdateIsCorrectFlagView(object):
+    """ is_correctフラグ更新 """
+    def setup(self):
+        self.inst = api.UpdateIsCorrectFlagView('{"pkey": "1", "flag": "TRUE"}')
+
+    def test_view_001(self, monkeypatch):
+        """レスポンス
+        正常ケース
+
+        expect:
+          '{"msg": "englishを習得しました"}'
+        """
+        result = self.inst.view()
+
+        assert isinstance(result, api.JsonResponse)
+        assert result.status == '200 OK'
+        assert result.content_type == 'application/json'
+        assert result.body == json.dumps({'msg': 'englishを習得しました'})
+
+    def test_validate_001(self):
+        """更新データバリデーション
+        正常ケース
+
+        expect:
+          {'pkey': 1, 'flag': 'TRUE'}
+        """
+        return self.inst._validate() == {'pkey': 1, 'flag': 'TRUE'}
+
+    def test_update_is_correct_flag_001(self, monkeypatch):
+        """is_correctフラグ更新
+        正常ケース
+
+        in:
+          {'pkey': 1, 'flag': 'TRUE'}
+        expect:
+          'englishを習得しました'
+        """
+        expect_update_is_correct_flag = 'english'
+        def mock_update_is_correct_flag(self, pkey, flag):
+            return expect_update_is_correct_flag
+
+        monkeypatch.setattr(
+            dbaccess.Word,
+            'update_is_correct_flag',
+            mock_update_is_correct_flag
+        )
+        assert self.inst._update_is_correct_flag({'pkey': 1, 'flag': 'TRUE'}) ==\
+            f'{expect_update_is_correct_flag}を習得しました'
+
+    @pytest.mark.parametrize('input_01, input_02, expect', [
+        ('english', 'TRUE', 'englishを習得しました'),
+        ('english', 'FALSE', 'englishを未習得に変更しました'),
+    ])
+    def test_register_activity_001(self, monkeypatch, input_01, input_02, expect):
+        """アクティビティ登録
+        正常ケース
+
+        in_01:
+          'english'
+        in_02:
+          'TRUE'
+        expect:
+          'englishを習得しました'
+        in_01:
+          'english'
+        in_02:
+          'FALSE'
+        expect:
+          'englishを未習得に変更しました'
+        """
+        assert self.inst._register_activity(input_01, input_02) == expect
+
+
+class TestUpdateBookmarkView(object):
+    """ bookmarkフラグ更新 """
+    def setup(self):
+        self.inst = api.UpdateBookmarkView('{"pkey": "1", "flag": "TRUE"}')
+
+    def test_view_001(self, monkeypatch):
+        """レスポンス
+        正常ケース
+
+        expect:
+          '{"msg": "englishをブックマーク登録しました"}'
+        """
+        result = self.inst.view()
+
+        assert isinstance(result, api.JsonResponse)
+        assert result.status == '200 OK'
+        assert result.content_type == 'application/json'
+        assert result.body == json.dumps({'msg': 'englishをブックマーク登録しました'})
+
+    def test_validate_001(self):
+        """更新データバリデーション
+        正常ケース
+
+        expect:
+          {'pkey': 1, 'flag': 'TRUE'}
+        """
+        return self.inst._validate() == {'pkey': 1, 'flag': 'TRUE'}
+
+    def test_update_bookmark_flag_001(self, monkeypatch):
+        """bookmarkフラグ更新
+        正常ケース
+
+        in:
+          {'pkey': 1, 'flag': 'TRUE'}
+        expect:
+          'englishをブックマーク登録しました'
+        """
+        expect_update_bookmark_flag = 'english'
+        def mock_update_bookmark_flag(self, pkey, flag):
+            return expect_update_bookmark_flag
+
+        monkeypatch.setattr(
+            dbaccess.Word,
+            'update_bookmark_flag',
+            mock_update_bookmark_flag
+        )
+        assert self.inst._update_bookmark_flag({'pkey': 1, 'flag': 'TRUE'}) ==\
+             f'{expect_update_bookmark_flag}をブックマーク登録しました'
+
+    @pytest.mark.parametrize('input_01, input_02, expect', [
+        ('english', 'TRUE', 'englishをブックマーク登録しました'),
+        ('english', 'FALSE', 'englishをブックマーク解除しました'),
+    ])
+    def test_register_activity_001(self, monkeypatch, input_01, input_02, expect):
+        """アクティビティ登録
+        正常ケース
+
+        in_01:
+          'english'
+        in_02:
+          'TRUE'
+        expect:
+          'englishをブックマーク登録しました'
+        in_01:
+          'english'
+        in_02:
+          'FALSE'
+        expect:
+          'englishをブックマーク解除しました'
+        """
+        assert self.inst._register_activity(input_01, input_02) == expect
+
+
+class TestRegisterWordView(object):
+    """ 単語登録 """
+    def setup(self):
+        self.inst = api.RegisterWordView('{"eng_val": "english", "jap_val": "日本語"}')
+
+    def test_view_001(self, monkeypatch):
+        """レスポンス
+        正常ケース
+
+        expect:
+          '{"msg": "英語: english 日本語: 日本語 を登録しました"}'
+        """
+        result = self.inst.view()
+
+        assert isinstance(result, api.JsonResponse)
+        assert result.status == '200 OK'
+        assert result.content_type == 'application/json'
+        assert result.body == json.dumps({'msg': '英語: english 日本語: 日本語 を登録しました'})
+
+    def test_validate_001(self):
+        """登録データバリデーション
+        正常ケース
+
+        expect:
+          {'eng_val': 'english', 'jap_val': '日本語'}
+        """
+        return self.inst._validate() == {'eng_val': 'english', 'jap_val': '日本語'}
+
+    def test_insert_001(self, monkeypatch):
+        """英語登録
+        正常ケース
+
+        in:
+          {'eng_val': 'english', 'jap_val': '日本語'}
+        expect:
+          '英語: english 日本語: 日本語 を登録しました'
+        """
+        assert self.inst._insert({'eng_val': 'english', 'jap_val': '日本語'}) ==\
+            '英語: english 日本語: 日本語 を登録しました'
+
+    def test_register_activity_001(self, monkeypatch):
+        """アクティビティ登録
+        正常ケース
+
+        in_01:
+          'english'
+        in_02:
+          '日本語'
+        expect:
+          '英語: english 日本語: 日本語 を登録しました'
+        """
+        assert self.inst._register_activity('english', '日本語') ==\
+            '英語: english 日本語: 日本語 を登録しました'
+
+
+class TestDeleteView(object):
+    """ 削除 """
+    def setup(self):
+        self.inst = api.DeleteView('{"pkey": "1"}')
+        self.db = dbaccess.Word()
+
+    def test_view_001(self, monkeypatch):
+        """レスポンス
+        正常ケース
+
+        expect:
+          '{"msg": "englishを削除しました"}'
+        """
+        result = self.inst.view()
+
+        assert isinstance(result, api.JsonResponse)
+        assert result.status == '200 OK'
+        assert result.content_type == 'application/json'
+        assert result.body == json.dumps({'msg': 'englishを削除しました'})
+
+    def test_validate_001(self):
+        """削除データバリデーション
+        正常ケース
+
+        expect:
+          {'pkey': 1}
+        """
+        return self.inst._validate() == {'pkey': 1}
+
+    def test_delete_001(self, monkeypatch):
+        """英語削除
+        正常ケース
+
+        in:
+          {'pkey': 1}
+        expect:
+          'englishを削除しました'
+        """
+        assert self.inst._delete({'pkey': 1}) == 'englishを削除しました'
+
+    def test_register_activity_001(self, monkeypatch):
+        """アクティビティ登録
+        正常ケース
+
+        in:
+          'english'
+        expect:
+          'englishを削除しました'
+        """
+        assert self.inst._register_activity('english') ==\
+            'englishを削除しました'
