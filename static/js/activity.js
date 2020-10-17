@@ -34,7 +34,7 @@ class ActivityTable {
     const table = document.createElement('table');
 
     table.id = 'activityTable';
-    table.classList.add(...['cell-border', 'compact', 'hover', 'nowrap', 'stripe']);
+    table.classList.add(...['cell-border', 'compact', 'hover', 'stripe', 'dt-responsive']);
     this._initDataTable(table);
     return table;
   }
@@ -146,7 +146,7 @@ export class ActivityComponent {
    * @return {Element} ヘディング
    */
   _createHeading() {
-    const headingInst = new Heading({ text: 'アクティビティ一覧' });
+    const headingInst = new Heading({ text: 'アクティビティ' });
 
     return headingInst.component;
   }

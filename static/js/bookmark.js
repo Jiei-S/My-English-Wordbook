@@ -1,5 +1,5 @@
 /* 
-    ブックマーク一覧
+    ブックマーク
  */
 'use strict';
 import { ConfirmModal, Heading, Modal, util } from './component.js';
@@ -7,7 +7,7 @@ import { ConfirmModal, Heading, Modal, util } from './component.js';
 
 class BookmarkTable {
   /**
-   * ブックマーク一覧テーブル
+   * ブックマークテーブル
    * 
    * @param {Array} bookmarkData ブックマークデータ
    */
@@ -18,22 +18,22 @@ class BookmarkTable {
   /**
    * 要素返却
    * 
-   * @return {Element} ブックマーク一覧テーブル
+   * @return {Element} ブックマークテーブル
    */
   get component() {
     return this._create();
   }
 
   /**
-   * ブックマーク一覧テーブル生成
+   * ブックマークテーブル生成
    * 
-   * @return {Element} table ブックマーク一覧テーブル
+   * @return {Element} table ブックマークテーブル
    */
   _create() {
     const table = document.createElement('table');
 
     table.id = 'bookmarkTable';
-    table.classList.add(...['cell-border', 'compact', 'hover', 'nowrap', 'stripe']);
+    table.classList.add(...['cell-border', 'compact', 'hover', 'stripe', 'dt-responsive']);
     this._initDataTable(table);
     return table;
   }
@@ -41,7 +41,7 @@ class BookmarkTable {
   /**
    * DataTable初期化
    * 
-   * @param {Element} table ブックマーク一覧テーブル
+   * @param {Element} table ブックマークテーブル
    * @return {undefined} undefined
    */
   _initDataTable(table) {
@@ -62,25 +62,32 @@ class BookmarkTable {
           {
             data: null,
             title: '管理',
+            className: 'tx-center',
             render: (data) => {
-              let elm = '<div class="admin-wrap d-flex">';
+              let adminBtnWrap = '<div class="admin-btn-wrap d-none">';
 
-              elm += `
+              adminBtnWrap += `
                 <button class="pronounce primary" data-english-val="${data.english}">
                   <i class="fas fa-volume-up"></i>
                   <span>発音<span>
                 </button>`;
 
-              elm += `
+              adminBtnWrap += `
                 <button class="rescission-bookmark danger" data-english-id=${data.id} data-english-val="${data.english}">
                   <i class="far fa-trash-alt"></i>
                   <span>ブックマーク解除<span>
                 </button>`;
-              return elm;
+
+              return `<i class="admin-btn-show far fa-minus-square fa-plus-square"></i>${adminBtnWrap}`;
             },
             orderable: false,
             searchable: false,
           },
+        ],
+        columnDefs: [
+          { targets: 0, width: 180 },
+          { targets: 1, width: 120 },
+          { targets: 2, width: 80 },
         ],
         language: {
           url: 'http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Japanese.json',
@@ -89,11 +96,24 @@ class BookmarkTable {
       });
 
       /**
+       * 管理ボタントグルイベント
+       * 
+       * @param {Event} e イベント
+       */
+      $(document).off().on('click', '.admin-btn-show', (e) => {
+        const adminBtnWrapShowIcon = e.target;
+
+        adminBtnWrapShowIcon.classList.toggle('fa-plus-square');
+        adminBtnWrapShowIcon.classList.toggle('open');
+        adminBtnWrapShowIcon.nextElementSibling.classList.toggle('d-none');
+      });
+
+      /**
        * 発音イベント
        * 
        * @param {Event} e イベント
        */
-      $(document).off().on('click', '.pronounce', (e) => {
+      $(document).on('click', '.pronounce', (e) => {
         util.pronounceEnglish(e.currentTarget.dataset.englishVal);
       });
 
@@ -153,17 +173,17 @@ export class BookmarkComponent {
   /**
    * 要素返却
    * 
-   * @return {Element} ブックマーク一覧コンポーネント
+   * @return {Element} ブックマークコンポーネント
    */
   get component() {
     return this._bookmarkElm;
   }
 
   /**
-   * ブックマーク一覧データ取得
+   * ブックマークデータ取得
    * 
    * @param {String} componentName コンポーネント名
-   * @return {Object} ブックマーク一覧データ
+   * @return {Object} ブックマークデータ
    */
   async _getBookmarkData(componentName) {
     try {
@@ -179,10 +199,10 @@ export class BookmarkComponent {
   }
 
   /**
-   * ブックマーク一覧生成(ラッパー)
+   * ブックマーク生成(ラッパー)
    * 
-   * @param {Array} bookmarkData ブックマーク一覧データ
-   * @return {Object} ブックマーク一覧
+   * @param {Array} bookmarkData ブックマークデータ
+   * @return {Object} ブックマーク
    */
   async _createBookmarkWrap(bookmarkData) {
     const _bookmarkData = await bookmarkData;
@@ -199,16 +219,16 @@ export class BookmarkComponent {
    * @return {Element} ヘディング
    */
   _createHeading() {
-    const headingInst = new Heading({ text: 'ブックマーク一覧' });
+    const headingInst = new Heading({ text: 'ブックマーク' });
 
     return headingInst.component;
   }
 
   /**
-   * ブックマーク一覧テーブル生成
+   * ブックマークテーブル生成
    * 
-   * @param {Object} bookmarkData ブックマーク一覧データ
-   * @return {Element} ブックマーク一覧テーブル
+   * @param {Object} bookmarkData ブックマークデータ
+   * @return {Element} ブックマークテーブル
    */
   _createBookmarkTable(bookmarkData) {
     const bookmarkTableInst = new BookmarkTable(bookmarkData);

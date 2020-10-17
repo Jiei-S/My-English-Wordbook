@@ -400,8 +400,19 @@ header, footer {
 }
 
 /* ----- englishList ----- */
-.admin-wrap button:not(:last-child) {
-    margin-right: 1rem;
+i.admin-btn-show {
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--base-tx);
+}
+i.admin-btn-show:hover {
+    transform: scale(1.05);
+    transition: all 300ms 0s ease;
+    color: var(--light-blue);
+    cursor: pointer;
+}
+.admin-btn-wrap button {
+    margin: 0.2rem 0;
 }
 .form-group {
     margin-bottom: 3rem;
@@ -463,6 +474,12 @@ body.modal-open {
     header, footer {
         padding: 0.6rem 1rem;
     }
+    button {
+        padding: 0.5rem 0.3rem;
+    }
+    #learningWrap, #englishListTableWrap, #bookmarkTableWrap, #activityTableWrap, #registerFormWrap {
+        width: 80%;
+    }
     #activityWrap {
         margin-top: 0;
     }
@@ -488,19 +505,38 @@ body.modal-open {
         display: none;
     }
     main {
-        padding-bottom: 100px;
+        margin: 2rem auto;
+        padding-bottom: 50px;
     }
     footer {
         position: fixed;
+        width: 100%;
         bottom: 0;
         display: block !important;
-        justify-content: center !important;
         text-align: center;
-        padding: 0.6rem 2rem;
+        padding: 0.6rem 0;
     }
     footer .menu-wrap {
         justify-content: space-around;
         flex-wrap: wrap;
+    }
+    .menu-wrap .menu {
+        width: calc(100% / 6);
+        padding: 0;
+    }
+    .menu-wrap .menu i {
+        margin: 0
+    }
+    .menu-wrap .menu span {
+        display: block;
+        font-size: 0.8rem;
+    }
+    .menu-wrap .menu:hover {
+        padding: 0;
+        border: 0;
+    }
+    footer small {
+        display: none;
     }
     #secondWrap {
         display: block;
@@ -514,5 +550,21 @@ body.modal-open {
     }
     #learningLogWrap {
         padding: 1rem;
+    }
+    #answersWrap li {
+        margin: 2.4rem 2rem;
+    }
+    #englishListTableWrap button, #bookmarkTableWrap button {
+        padding: 1rem;
+        border-radius: 50%;
+    }
+    #englishListTableWrap button i, #bookmarkTableWrap button i {
+        margin: 0;
+    }
+    #englishListTableWrap button span, #bookmarkTableWrap button span {
+        display: none;
+    }
+    #registerFormWrap {
+        padding: 4rem 2rem;
     }
 }

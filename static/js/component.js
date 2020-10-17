@@ -185,7 +185,6 @@ export class Menu {
         const menuIcon = document.createElement('i');
 
         menu.classList.add(...['menu', 'cursor-pointer']);
-        menu.dataset.componentName = menuData.getComponentName();
         menu.addEventListener('click', menuData.renderComponent);
         span.textContent = menuData.text;
         menuIcon.classList.add(...menuData.iconClassNames);
@@ -349,6 +348,36 @@ export class Button {
    */
   setAddEventListener(event) {
     this._buttonElm.addEventListener('click', event);
+  }
+}
+
+
+export class PronounceButton extends Button {
+  /**
+   * 発音ボタン
+   * 
+   * @param {String} englishVal 英語
+   */
+  constructor(englishVal) {
+    super({
+      text: '発音',
+      classNames: ['primary'],
+      iconClassNames: [
+        'fas',
+        'fa-volume-up'
+      ]
+    });
+    super.setAddEventListener(this._pronounce);
+    this._englishVal = englishVal;
+  }
+
+  /**
+   * 発音
+   * 
+   * @return {undefined} undefined
+   */
+  _pronounce = () => {
+    pronounceEnglish(this._englishVal);
   }
 }
 

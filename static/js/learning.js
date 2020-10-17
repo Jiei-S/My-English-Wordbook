@@ -2,7 +2,7 @@
     学習
  */
 'use strict';
-import { Button, Modal, util } from './component.js';
+import { Button, PronounceButton, Modal, util } from './component.js';
 
 
 class English {
@@ -179,36 +179,6 @@ class Answer {
         bodyText: errObj.msg
       });
     }
-  }
-}
-
-
-class PronounceButton extends Button {
-  /**
-   * 発音ボタン
-   * 
-   * @param {String} englishVal 英語
-   */
-  constructor(englishVal) {
-    super({
-      text: '発音',
-      classNames: ['primary'],
-      iconClassNames: [
-        'fas',
-        'fa-volume-up'
-      ]
-    });
-    super.setAddEventListener(this._pronounce);
-    this._englishVal = englishVal;
-  }
-
-  /**
-   * 発音
-   * 
-   * @return {undefined} undefined
-   */
-  _pronounce = () => {
-    util.pronounceEnglish(this._englishVal);
   }
 }
 
