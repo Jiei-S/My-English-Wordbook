@@ -60,6 +60,7 @@ const createSection = ({ id = null, classNames = null, innerElm }) => {
 /**
  * エラーメッセージ生成
  * 
+ * @param {Array} classNames エラーメッセージクラス名
  * @param {String} text メッセージ
  * @return {Element} errorMsg エラーメッセージ
  */
