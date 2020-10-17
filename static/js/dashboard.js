@@ -337,6 +337,13 @@ class Activity {
    * @return {Element} アクティビティ
    */
   _createActivityWrap() {
+    if (!this._activitys.length) {
+      return util.createErrorMsg({
+        classNames: ['tx-center'],
+        text: util.COMMON_TEXT.NOT_EXIST_DATA
+      });
+    }
+
     const ul = document.createElement('ul');
 
     this._activitys.forEach(activity => {
@@ -344,8 +351,8 @@ class Activity {
 
       li.classList.add(...['d-flex', 'align-items-center', 'pt-05', 'pb-05']);
       util.appendMultipleChild(li, [
-        this._createActivityIcon(activity.type_flag),
-        this._createActivity(activity.detail, activity.type_flag)
+        this._createActivityIcon(activity.type),
+        this._createActivity(activity.detail, activity.type)
       ]);
       ul.appendChild(li);
     });
@@ -447,6 +454,13 @@ class LearningLog {
    * @return {Element} 習得ログ
    */
   _createLearningLog() {
+    if (!this._learningLogData.length) {
+      return util.createErrorMsg({
+        classNames: ['tx-center'],
+        text: util.COMMON_TEXT.NOT_EXIST_DATA
+      });
+    }
+  
     const learningLogChartInst = new LearningLogChart(this._learningLogData);
 
     return util.createWrap({

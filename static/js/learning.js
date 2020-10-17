@@ -351,6 +351,14 @@ export class LearningComponent {
    */
   async createLearningWrap(learningData) {
     const _learningData = await learningData;
+
+    if (!_learningData.length) {
+      return util.createErrorMsg({
+        classNames: ['tx-center'],
+        text: util.COMMON_TEXT.NOT_EXIST_DATA
+      });
+    }
+
     const { id, english, correct, incorrect_1, incorrect_2, incorrect_3, bookmark_flag } = _learningData.shift();
     const correctData = { id, correct };
 

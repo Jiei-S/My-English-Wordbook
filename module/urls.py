@@ -30,7 +30,7 @@ END_POINT = {
 
 
 def dispatch(req_data):
-    """API割り当て
+    """割り当て
 
     @param req_data リクエストデータ
     @return 正常レスポンス
@@ -39,9 +39,38 @@ def dispatch(req_data):
     @return InternalServerErrorレスポンス
     """
     path = req_data.get('PATH_INFO')
-    if PurePath(path).match('static/*/*'):
-        return StaticResponse(path[1:], PurePath(path).suffix[1:])
 
+    if PurePath(path).match('static/*/*'):
+        return dispatch_static(path)
+    return dispatch_api(path, req_data)
+
+
+def dispatch_static(path):
+    """静的ファイル割り当て
+
+    @param path リクエストパス
+    @return 正常レスポンス
+    @return NotFoundレスポンス
+    """
+    try:
+        if PurePath(path).suffix[1:]:
+            return StaticResponse(path[1:], PurePath(path).suffix[1:])
+        raise FileNotFoundError()
+    except FileNotFoundError as err:
+        LOGGER.error(err)
+        return NotFound()
+
+
+def dispatch_api(path, req_data):
+    """API割り当て
+
+    @param path リクエストパス
+    @param req_data リクエストデータ
+    @return 正常レスポンス
+    @return NotFoundレスポンス
+    @return BadRequestレスポンス
+    @return InternalServerErrorレスポンス
+    """
     req_api = END_POINT.get(path)
     if req_api is None:
         return NotFound()

@@ -12,7 +12,7 @@ from module.dbaccess import (
     Word, Activity, Flag
 )
 from module.util import (
-    open_html_file,
+    open_file,
     db_operation,
     convert_to_activity_type_for_display,
     convert_to_date_for_display
@@ -115,9 +115,7 @@ class StaticResponse(ResponseBase):
         @param req_path リクエストパス
         @param suffix 拡張子
         """
-        with open(req_path, 'r') as file:
-            self._body = file.read()
-        super().__init__(self._content_types[suffix], self._body)
+        super().__init__(self._content_types[suffix], open_file(req_path))
 
 
 class JsonResponse(ResponseBase):
@@ -148,7 +146,7 @@ class Validate:
         """
         try:
             return json.loads(req_data)
-        except json.JSONDecodeError as err:
+        except (TypeError, json.JSONDecodeError) as err:
             raise ValueError(err)
 
     def _validate(func):
@@ -161,7 +159,7 @@ class Validate:
         def __validate(*args):
             try:
                 return func(*args)
-            except (KeyError, IndexError, ValueError) as err:
+            except (KeyError, TypeError, ValueError) as err:
                 raise ValueError(err)
         return __validate
 
@@ -231,7 +229,7 @@ class DashboardView:
     def __init__(self):
         """コンストラクタ
         """
-        self._body = self.__open_html_file()
+        self._body = self._open_html_file()
         self._db_word = Word()
         self._db_activity = Activity()
 
@@ -250,12 +248,12 @@ class DashboardView:
         }
         return HtmlResponse(self._body.format(dashboardData=json.dumps(dashboard_data)))
 
-    def __open_html_file(self):
+    def _open_html_file(self):
         """HTML読み込み
 
         @return ファイルの内容
         """
-        return open_html_file('index.html')
+        return open_file('index.html')
 
     @db_operation
     def _count_num(self):
@@ -277,12 +275,15 @@ class DashboardView:
         """アクティビティ5件取得
 
         @return アクティビティ5件
-        @retval type_flag アクティビティ種別
+        @retval type アクティビティ種別
         @retval detail アクティビティ詳細
         """
         rows = self._db_activity.select_activity_order_by_desc_limit_5()
         for row in rows:
-            row['type_flag'] = convert_to_activity_type_for_display(row['type'])
+            try:
+                row['type'] = convert_to_activity_type_for_display(row['type'])
+            except (KeyError, TypeError, IndexError):
+                continue
         return rows
 
     @db_operation
@@ -298,7 +299,10 @@ class DashboardView:
             to_date=TODAY
         )
         for row in rows:
-            row['date'] = convert_to_date_for_display(row['date'])
+            try:
+                row['date'] = convert_to_date_for_display(row['date'])
+            except KeyError:
+                continue
         return rows
 
 
@@ -355,7 +359,7 @@ class LearningView:
         @retval bookmark_flag 論理値
         """
         data = []
-        for _, correct in enumerate(corrects):
+        for correct in corrects:
             incorrects_list = []
 
             while True:
@@ -461,13 +465,16 @@ class ActivityView:
 
         @return アクティビティ一覧データ
         @retval date アクティビティ日付
-        @retval type_flag アクティビティ種別
+        @retval type アクティビティ種別
         @retval detail アクティビティ詳細
         """
         rows = self._db_activity.select_all()
         for row in rows:
-            row['date'] = convert_to_date_for_display(row['date'])
-            row['type_flag'] = convert_to_activity_type_for_display(row['type'])
+            try:
+                row['date'] = convert_to_date_for_display(row['date'])
+                row['type'] = convert_to_activity_type_for_display(row['type'])
+            except (KeyError, TypeError, IndexError):
+                continue
         return rows
 
 
