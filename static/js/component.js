@@ -63,7 +63,7 @@ const createSection = ({ id = null, classNames = null, innerElm }) => {
  * @param {String} text メッセージ
  * @return {Element} errorMsg エラーメッセージ
  */
-const createErrorMsg = ({ classNames = null, text = null }) => {
+const createErrorMsg = ({ classNames = null, text = null } = {}) => {
   const errorMsg = document.createElement('div');
 
   errorMsg.classList.add('error-msg');

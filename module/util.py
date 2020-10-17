@@ -6,10 +6,10 @@ from module.dbaccess import (
 )
 
 
-def open_html_file(file):
-    """HTML読み込み
+def open_file(file):
+    """ファイル読み込み
 
-    @param file HTMLファイル
+    @param file ファイル
     @return ファイルの内容
     @exception FileNotFoundError
     """

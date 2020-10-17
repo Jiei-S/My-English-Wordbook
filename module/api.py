@@ -12,7 +12,7 @@ from module.dbaccess import (
     Word, Activity, Flag
 )
 from module.util import (
-    open_html_file,
+    open_file,
     db_operation,
     convert_to_activity_type_for_display,
     convert_to_date_for_display
@@ -115,9 +115,7 @@ class StaticResponse(ResponseBase):
         @param req_path リクエストパス
         @param suffix 拡張子
         """
-        with open(req_path, 'r') as file:
-            self._body = file.read()
-        super().__init__(self._content_types[suffix], self._body)
+        super().__init__(self._content_types[suffix], open_file(req_path))
 
 
 class JsonResponse(ResponseBase):
@@ -255,7 +253,7 @@ class DashboardView:
 
         @return ファイルの内容
         """
-        return open_html_file('index.html')
+        return open_file('index.html')
 
     @db_operation
     def _count_num(self):
