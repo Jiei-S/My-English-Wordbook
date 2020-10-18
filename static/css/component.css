@@ -567,4 +567,8 @@ body.modal-open {
     #registerFormWrap {
         padding: 4rem 2rem;
     }
+    #activityWrap li div:first-child, .activityTable-detail-wrap div:first-child {
+        width: 30px;
+        height: 30px;
+    }
 }
