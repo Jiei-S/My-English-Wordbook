@@ -2,10 +2,24 @@
     メニュー
  */
 'use strict';
-import { Learning, EnglishList, Bookmark, Activity, Register } from './main.js';
+import { Dashboard, Learning, EnglishList, Bookmark, Activity, Register } from './main.js';
 
 
 export const MENUS = [
+  {
+    text: 'ダッシュボード',
+    iconClassNames: [
+      'fas',
+      'fa-home',
+      'mr-05'
+    ],
+    renderComponent() {
+      location.reload();
+    },
+    getComponentName() {
+      return Dashboard.COMPONENT_NAME;
+    },
+  },
   {
     text: '学習',
     iconClassNames: [
@@ -13,57 +27,53 @@ export const MENUS = [
       'fa-pencil-alt',
       'mr-05'
     ],
-    renderComponent(e) {
+    renderComponent() {
       new Learning;
-      toggleMenu(e.target.closest('.menu').dataset.componentName);
     },
     getComponentName() {
       return Learning.COMPONENT_NAME;
     },
   },
   {
-    text: '単語一覧',
+    text: '単語',
     iconClassNames: [
       'fas',
       'fa-clipboard-list',
       'mr-05'
     ],
-    renderComponent(e) {
+    renderComponent() {
       new EnglishList;
-      toggleMenu(e.target.closest('.menu').dataset.componentName);
     },
     getComponentName() {
       return EnglishList.COMPONENT_NAME;
     },
   },
   {
-    text: 'ブックマーク一覧',
+    text: 'ブックマーク',
     iconClassNames: [
       'fas',
       'fa-bookmark',
       'mr-05'
     ],
-    renderComponent(e) {
+    renderComponent() {
       new Bookmark;
-      toggleMenu(e.target.closest('.menu').dataset.componentName);
     },
     getComponentName() {
-      return 'bookmark';
+      return Bookmark.COMPONENT_NAME;
     },
   },
   {
-    text: 'アクティビティ一覧',
+    text: 'アクティビティ',
     iconClassNames: [
       'far',
       'fa-list-alt',
       'mr-05'
     ],
-    renderComponent(e) {
+    renderComponent() {
       new Activity;
-      toggleMenu(e.target.closest('.menu').dataset.componentName);
     },
     getComponentName() {
-      return 'activity';
+      return Activity.COMPONENT_NAME;
     },
   },
   {
@@ -73,31 +83,11 @@ export const MENUS = [
       'fa-plus-circle',
       'mr-05'
     ],
-    renderComponent(e) {
+    renderComponent() {
       new Register;
-      toggleMenu(e.target.closest('.menu').dataset.componentName);
     },
     getComponentName() {
-      return 'register';
+      return Register.COMPONENT_NAME;
     },
   },
 ];
-
-
-/**
- * カレント画面判定により、該当メニュー非表示
- * 
- * @param {String} targetComponentName コンポーネント名
- * @return {undefined} undefined
- */
-const toggleMenu = (targetComponentName) => {
-  const menus = document.getElementsByClassName('menu');
-
-  Array.from(menus).forEach(menu => {
-    if (menu.dataset.componentName === targetComponentName) {
-      menu.classList.add('d-none');
-    } else {
-      menu.classList.remove('d-none');
-    }
-  });
-};

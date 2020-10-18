@@ -1,5 +1,5 @@
 /* 
-    単語一覧
+    単語
  */
 'use strict';
 import { ConfirmModal, Heading, Modal, util } from './component.js';
@@ -7,9 +7,9 @@ import { ConfirmModal, Heading, Modal, util } from './component.js';
 
 class EnglishListTable {
   /**
-   * 単語一覧テーブル
+   * 単語テーブル
    * 
-   * @param {Array} englishListData 単語一覧データ
+   * @param {Array} englishListData 単語データ
    */
   constructor(englishListData) {
     this._englishListData = englishListData;
@@ -18,22 +18,22 @@ class EnglishListTable {
   /**
    * 要素返却
    * 
-   * @return {Element} 単語一覧テーブル
+   * @return {Element} 単語テーブル
    */
   get component() {
     return this._create();
   }
 
   /**
-   * 単語一覧テーブル生成
+   * 単語テーブル生成
    * 
-   * @return {Element} table 単語一覧テーブル
+   * @return {Element} table 単語テーブル
    */
   _create() {
     const table = document.createElement('table');
 
     table.id = 'englishListTable';
-    table.classList.add(...['cell-border', 'compact', 'hover', 'nowrap', 'stripe', 'dt-responsive']);
+    table.classList.add(...['cell-border', 'compact', 'hover', 'stripe', 'dt-responsive']);
     this._initDataTable(table);
     return table;
   }
@@ -41,7 +41,7 @@ class EnglishListTable {
   /**
    * DataTable初期化
    * 
-   * @param {Element} table 単語一覧テーブル
+   * @param {Element} table 単語テーブル
    * @return {undefined} undefined
    */
   _initDataTable(table) {
@@ -53,7 +53,7 @@ class EnglishListTable {
         columns: [
           {
             data: 'is_correct',
-            title: '学習ステータス',
+            title: 'ステータス',
             className: 'learning-status-flag',
             render: (data) => data ? '習得済み' : '未習得',
             searchable: false,
@@ -69,33 +69,43 @@ class EnglishListTable {
           {
             data: null,
             title: '管理',
+            className: 'tx-center',
             render: (data) => {
-              let elm = '<div class="admin-wrap d-flex">';
+              let adminBtnWrap = '<div class="admin-btn-wrap d-none">';
 
-              elm += `
+              adminBtnWrap += `
                 <button class="pronounce primary" data-english-val="${data.english}">
                   <i class="fas fa-volume-up"></i>
                   <span>発音<span>
                 </button>`;
 
+              /**
               if (data.is_correct) {
-                elm += `
+                adminBtnWrap += `
                   <button class="rescission-correct danger" data-english-id=${data.id} data-english-val="${data.english}">
                     <i class="far fa-times-circle"></i>
                     <span>未習得に変更</span>
                   </button>`;
               }
+              */
 
-              elm += `
+              adminBtnWrap += `
                 <button class="delete-word danger" data-english-id=${data.id} data-english-val="${data.english}">
                   <i class="far fa-trash-alt"></i>
                   <span>単語削除<span>
                 </button>`;
-              return elm;
+
+              return `<i class="admin-btn-show far fa-minus-square fa-plus-square"></i>${adminBtnWrap}`;
             },
             orderable: false,
             searchable: false,
           },
+        ],
+        columnDefs: [
+          { targets: 0, width: 80 },
+          { targets: 1, width: 180 },
+          { targets: 2, width: 120 },
+          { targets: 3, width: 80 }
         ],
         language: {
           url: 'http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Japanese.json',
@@ -104,11 +114,24 @@ class EnglishListTable {
       });
 
       /**
+       * 管理ボタントグルイベント
+       * 
+       * @param {Event} e イベント
+       */
+      $(document).off().on('click', '.admin-btn-show', (e) => {
+        const adminBtnWrapShowIcon = e.target;
+
+        adminBtnWrapShowIcon.classList.toggle('fa-plus-square');
+        adminBtnWrapShowIcon.classList.toggle('open');
+        adminBtnWrapShowIcon.nextElementSibling.classList.toggle('d-none');
+      });
+
+      /**
        * 発音イベント
        * 
        * @param {Event} e イベント
        */
-      $(document).off().on('click', '.pronounce', (e) => {
+      $(document).on('click', '.pronounce', (e) => {
         util.pronounceEnglish(e.currentTarget.dataset.englishVal);
       });
 
@@ -116,7 +139,6 @@ class EnglishListTable {
        * 未習得に変更イベント
        * 
        * @param {Event} e イベント
-       */
       $(document).on('click', '.rescission-correct', (e) => {
         const clickedBtn = e.currentTarget;
         const pkey = clickedBtn.dataset.englishId;
@@ -154,6 +176,7 @@ class EnglishListTable {
           }
         });
       });
+      */
 
       /**
        * 単語削除イベント
@@ -210,17 +233,17 @@ export class EnglishListComponent {
   /**
    * 要素返却
    * 
-   * @return {Element} 単語一覧コンポーネント
+   * @return {Element} 単語コンポーネント
    */
   get component() {
     return this._englishListElm;
   }
 
   /**
-   * 単語一覧データ取得
+   * 単語データ取得
    * 
    * @param {String} componentName コンポーネント名
-   * @return {Object} 単語一覧データ
+   * @return {Object} 単語データ
    */
   async _getEnglishListData(componentName) {
     try {
@@ -236,10 +259,10 @@ export class EnglishListComponent {
   }
 
   /**
-   * 単語一覧生成(ラッパー)
+   * 単語生成(ラッパー)
    * 
-   * @param {Array} englishListData 単語一覧データ
-   * @return {Object} 単語一覧
+   * @param {Array} englishListData 単語データ
+   * @return {Object} 単語
    */
   async _createEnglishListWrap(englishListData) {
     const _englishListData = await englishListData;
@@ -256,16 +279,16 @@ export class EnglishListComponent {
    * @return {Element} ヘディング
    */
   _createHeading() {
-    const headingInst = new Heading({ text: '単語一覧' });
+    const headingInst = new Heading({ text: '単語' });
 
     return headingInst.component;
   }
 
   /**
-   * 単語一覧テーブル生成
+   * 単語テーブル生成
    * 
-   * @param {Object} englishListData 単語一覧データ
-   * @return {Element} 単語一覧テーブル
+   * @param {Object} englishListData 単語データ
+   * @return {Element} 単語テーブル
    */
   _createEnglishListTable(englishListData) {
     const englishListTableInst = new EnglishListTable(englishListData);

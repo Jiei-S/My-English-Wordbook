@@ -124,6 +124,7 @@ export class Dashboard {
    * 
    * @param {Object} dashboardData ダッシュボードデータ
    */
+  static COMPONENT_NAME = 'dashboard';
   constructor(dashboardData) {
     this._dashboardData = dashboardData;
     this._dashboardComponentInst = new DashboardComponent(this._dashboardData);
@@ -156,7 +157,7 @@ export class Learning {
 
 export class EnglishList {
   /**
-   * 単語一覧コンポーネント
+   * 単語コンポーネント
    */
   static COMPONENT_NAME = 'english_list';
   constructor() {
@@ -178,7 +179,7 @@ export class EnglishList {
 
 export class Bookmark {
   /**
-   * ブックマーク一覧コンポーネント
+   * ブックマークコンポーネント
    */
   static COMPONENT_NAME = 'bookmark';
   constructor() {
@@ -200,7 +201,7 @@ export class Bookmark {
 
 export class Activity {
   /**
-   * アクティビティ一覧コンポーネント
+   * アクティビティコンポーネント
    */
   static COMPONENT_NAME = 'activity';
   constructor() {
@@ -224,6 +225,7 @@ export class Register {
   /**
    * 単語登録コンポーネント
    */
+  static COMPONENT_NAME = 'register';
   constructor() {
     this._registerComponentInst = new RegisterComponent();
     render(this._registerComponentInst.component);
