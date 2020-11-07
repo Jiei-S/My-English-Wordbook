@@ -42,7 +42,7 @@ $ export PSQL_PASSWORD=<パスワード>
 $ export PSQL_PORT=<ポート番号>
 ```
 <参考>  
-・[PostgreSQL Downloads](https://www.postgresql.org/download/)
+・[PostgreSQL Downloads](https://www.postgresql.org/download/)  
 ・[psycopg](https://www.psycopg.org)
 
 ## Usage
