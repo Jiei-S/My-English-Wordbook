@@ -1,6 +1,7 @@
 """
 サーバ
 """
+import os
 from wsgiref.simple_server import make_server
 
 from module.urls import dispatch
@@ -21,6 +22,7 @@ def run(environ, start_response):
 
 
 if __name__ == '__main__':
-    with make_server('', 8000, run) as httpd:
-        print('Serving HTTP on 0.0.0.0 port 8000 ...')
+    PORT = os.environ.get('PORT', 8000)
+    with make_server('', int(PORT), run) as httpd:
+        print(f'Serving HTTP on 0.0.0.0 port {PORT} ...')
         httpd.serve_forever()
