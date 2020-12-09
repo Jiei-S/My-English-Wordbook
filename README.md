@@ -2,7 +2,8 @@
 英単語学習アプリです。  
 英単語を学習できるだけでなく、ブックマークしたり、新しく単語の登録も可能。自分だけの英単語帳を作れます。  
 ダッシュボード画面より、習得率や学習進捗を可視化できます。  
-[Demo](https://english-wordbook.herokuapp.com/)
+[Demo](https://english-wordbook.herokuapp.com/)  
+※現在、スマホ画面作成中
 
 ## Features
 ### ダッシュボード  
