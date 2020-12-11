@@ -1,6 +1,6 @@
 # My-English-Wordbook
 英単語学習アプリです。  
-英単語を学習できるだけでなく、ブックマークしたり、新しく単語の登録も可能。自分だけの英単語帳を作れます。  
+学習はもちろん、ブックマーク機能や、新しく単語の登録も可能。自分だけの英単語帳を作れます。  
 ダッシュボード画面より、習得率や学習進捗を可視化できます。  
 [Demo](https://english-wordbook.herokuapp.com/)  
 ※現在、スマホ画面作成中  
@@ -37,7 +37,7 @@
 ```
 psycopg2==2.8.6
 ```
-- PostgreSQL環境構築
+- PostgreSQL環境変数設定
 ```
 $ export PSQL_HOST=<ホスト名>
 $ export PSQL_DB_NAME=<データベース名>
