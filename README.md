@@ -2,7 +2,7 @@
 英単語学習アプリです。  
 学習はもちろん、ブックマーク機能や、新しく単語の登録も可能。自分だけの英単語帳を作れます。  
 ダッシュボード画面より、習得率や学習進捗を可視化できます。  
-[Demo](https://english-wordbook.herokuapp.com/){:target="_blank"}  
+[Demo](https://english-wordbook.herokuapp.com/)  
 ※デモ環境につき、一部機能制限  
 ※現在、スマホ画面作成中  
 ※スピンダウンにより、初期表示が遅いですがご了承ください。
