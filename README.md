@@ -32,30 +32,3 @@
 ### 単語登録
 新しく単語の登録ができます。
 ![単語登録](https://user-images.githubusercontent.com/55335212/96358516-f4f2d200-1142-11eb-9d02-1e24b77edfa8.png)
-
-## Requirement
-- ライブラリ
-```
-psycopg2==2.8.6
-```
-- PostgreSQL環境変数設定
-```
-$ export PSQL_HOST=<ホスト名>
-$ export PSQL_DB_NAME=<データベース名>
-$ export PSQL_USER=<ユーザ名>
-$ export PSQL_PASSWORD=<パスワード>
-$ export PSQL_PORT=<ポート番号>
-```
-<参考>  
-・[PostgreSQL Downloads](https://www.postgresql.org/download/)  
-・[psycopg](https://www.psycopg.org)
-
-## Usage
-```
-$ git clone https://github.com/Jiei-S/My-English-Wordbook.git
-$ cd My-English-Wordbook/
-$ python server.py
-```
-
-## License
-MIT
