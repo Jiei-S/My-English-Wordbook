@@ -137,10 +137,7 @@ export class LearningRateChart {
     shape.style.backgroundColor = shapeColor;
     text.textContent = label;
     return util.createWrap({
-      classNames: [
-        'd-flex',
-        'learning-rate-shape-wrap'
-      ],
+      classNames: ['learning-rate-shape'],
       innerElm: [
         shape,
         text
@@ -158,14 +155,10 @@ export class LearningRateChart {
     const num = document.createTextNode(numVal);
     const per = document.createElement('span');
 
-    per.textContent = '語';
-    per.classList.add(...['ml-05', 'font-size-1']);
+    per.textContent = '語';'small'
+    per.classList.add('small-unit-text');
     return util.createWrap({
-      classNames: [
-        'learning-rate-num',
-        'tx-center',
-        'font-size-2'
-      ],
+      classNames: ['learning-rate-num'],
       innerElm: [
         num,
         per

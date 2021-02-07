@@ -78,10 +78,7 @@ class WordTotal {
     });
 
     return util.createWrap({
-      classNames: [
-        'head-wrap',
-        'ml-1'
-      ],
+      classNames: ['head-wrap'],
       innerElm: [headingInst.component]
     });
   }
@@ -93,15 +90,7 @@ class WordTotal {
    */
   _createWordTotalWrap() {
     return util.createWrap({
-      id: 'wordTotalWrap',
-      classNames: [
-        'pt-1',
-        'pb-1',
-        'pr-2',
-        'pl-2',
-        'tx-right',
-        'font-size-2'
-      ],
+      classNames: ['word-total-wrap'],
       innerElm: [this._createWordTotal()]
     });
   }
@@ -117,7 +106,7 @@ class WordTotal {
     const unit = document.createElement('span');
 
     unit.textContent = '語';
-    unit.classList.add(...['ml-05', 'font-size-1']);
+    unit.classList.add('small-unit-text');
     return util.appendMultipleChild(text, [
       textNode,
       unit
@@ -164,10 +153,7 @@ class BookmarkTotal {
     });
 
     return util.createWrap({
-      classNames: [
-        'head-wrap',
-        'ml-1'
-      ],
+      classNames: ['head-wrap'],
       innerElm: [headingInst.component]
     });
   }
@@ -179,15 +165,7 @@ class BookmarkTotal {
    */
   _createBookmarkTotalWrap() {
     return util.createWrap({
-      id: 'bookmarkTotalWrap',
-      classNames: [
-        'pt-1',
-        'pb-1',
-        'pr-2',
-        'pl-2',
-        'tx-right',
-        'font-size-2'
-      ],
+      classNames: ['bookmark-total-wrap'],
       innerElm: [this._createBookmarkTotal()]
     });
   }
@@ -203,7 +181,7 @@ class BookmarkTotal {
     const unit = document.createElement('span');
 
     unit.textContent = '語';
-    unit.classList.add(...['ml-05', 'font-size-1']);
+    unit.classList.add('small-unit-text');
     return util.appendMultipleChild(text, [
       textNode,
       unit
@@ -252,10 +230,7 @@ class LearningRate {
     });
 
     return util.createWrap({
-      classNames: [
-        'head-wrap',
-        'ml-1'
-      ],
+      classNames: ['head-wrap'],
       innerElm: [headingInst.component]
     });
   }
@@ -272,13 +247,7 @@ class LearningRate {
     );
 
     return util.createWrap({
-      classNames: [
-        'd-flex',
-        'align-items-center',
-        'pt-1',
-        'pb-1',
-        'pr-2'
-      ],
+      classNames: ['learning-rate-wrap'],
       innerElm: [learningRateChartInst.component]
     });
   }
@@ -323,10 +292,7 @@ class Activity {
     });
 
     return util.createWrap({
-      classNames: [
-        'head-wrap',
-        'ml-1'
-      ],
+      classNames: ['head-wrap'],
       innerElm: [headingInst.component]
     });
   }
@@ -349,7 +315,7 @@ class Activity {
     this._activitys.forEach(activity => {
       const li = document.createElement('li');
 
-      li.classList.add(...['d-flex', 'align-items-center', 'pt-05', 'pb-05']);
+      li.classList.add('dash-activity-list');
       util.appendMultipleChild(li, [
         this._createActivityIcon(activity.type),
         this._createActivity(activity.detail, activity.type)
@@ -357,12 +323,7 @@ class Activity {
       ul.appendChild(li);
     });
     return util.createWrap({
-      id: 'activityWrap',
-      classNames: [
-        'mt-1',
-        'pr-2',
-        'pl-2'
-      ],
+      classNames: ['dash-activity-wrap'],
       innerElm: [ul]
     });
   }
@@ -382,7 +343,7 @@ class Activity {
       }
     });
     return util.createWrap({
-      classNames: [typeFlag],
+      classNames: [`activity-${typeFlag}`],
       innerElm: [activityIcon]
     });
   }
@@ -440,10 +401,7 @@ class LearningLog {
     });
 
     return util.createWrap({
-      classNames: [
-        'head-wrap',
-        'ml-1'
-      ],
+      classNames: ['head-wrap'],
       innerElm: [headingInst.component]
     });
   }
@@ -464,13 +422,7 @@ class LearningLog {
     const learningLogChartInst = new LearningLogChart(this._learningLogData);
 
     return util.createWrap({
-      id: 'learningLogWrap',
-      classNames: [
-        'pt-1',
-        'pb-1',
-        'pr-1',
-        'pl-1'
-      ],
+      classNames: ['learning-log-wrap'],
       innerElm: [learningLogChartInst.component]
     });
   }
@@ -516,10 +468,7 @@ export class DashboardComponent {
     const downloadPngButtonInst = new DownloadPngButton();
 
     return util.createWrap({
-      classNames: [
-        'd-flex',
-        'justify-content-between'
-      ],
+      classNames: ['dash-first-wrap'],
       innerElm: [
         headingInst.component,
         downloadPngButtonInst.component
@@ -534,14 +483,7 @@ export class DashboardComponent {
    */
   _createSecondWrap() {
     return util.createWrap({
-      id: 'secondWrap',
-      classNames: [
-        'd-flex',
-        'justify-content-between',
-        'flex-wrap',
-        'mt-2',
-        'mb-2'
-      ],
+      classNames: ['dash-second-wrap'],
       innerElm: [
         this._createSecondLeftWrap(),
         this._createSecondRightWrap()
@@ -556,8 +498,7 @@ export class DashboardComponent {
    */
   _createSecondLeftWrap() {
     return util.createWrap({
-      id: 'secondLeftWrap',
-      classNames: ['w-49'],
+      classNames: ['dash-second-left-wrap'],
       innerElm: [
         this._createSecondLeftTopWrap(),
         this._createSecondLeftBottomWrap()
@@ -577,23 +518,19 @@ export class DashboardComponent {
     const bookmarkTotalInst = new BookmarkTotal(this._bookmarkTotal);
 
     return util.createWrap({
-      id: 'secondLeftTopWrap',
-      classNames: [
-        'd-flex',
-        'justify-content-between'
-      ],
+      classNames: ['dash-second-left-top-wrap'],
       innerElm: [
         util.createSection({
           classNames: [
             'card',
-            'w-49'
+            'dash-second-section'
           ],
           innerElm: [wordTotalInst.component]
         }),
         util.createSection({
           classNames: [
             'card',
-            'w-49'
+            'dash-second-section'
           ],
           innerElm: [bookmarkTotalInst.component]
         })
@@ -629,8 +566,7 @@ export class DashboardComponent {
     const activityInst = new Activity(this._activitys);
 
     return util.createWrap({
-      id: 'secondRightWrap',
-      classNames: ['w-49'],
+      classNames: ['dash-second-right-wrap'],
       innerElm: [
         util.createSection({
           classNames: [

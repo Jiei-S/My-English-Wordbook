@@ -11,7 +11,6 @@ class RegisterRunButton extends Button {
    */
   constructor() {
     super({
-      id: 'registerRunBtn',
       text: '登録',
       classNames: ['primary'],
       iconClassNames: [
@@ -287,15 +286,8 @@ export class RegisterComponent {
       id: 'registerFormWrap',
       classNames: [
         'card',
-        'w-70',
-        'mt-2',
-        'mb-2',
-        'mr-auto',
-        'ml-auto',
-        'pt-4',
-        'pb-4',
-        'pr-4',
-        'pl-4',
+        'register-form-wrap',
+        'component-wrap'
       ],
       innerElm: [
         registerFormInst.component,
@@ -315,8 +307,8 @@ export class RegisterComponent {
 
     return util.createWrap({
       classNames: [
-        'tx-right',
-        'btnWrap'
+        'btn-wrap',
+        'tx-right'
       ],
       innerElm: [
         registerRunButtonInst.component,

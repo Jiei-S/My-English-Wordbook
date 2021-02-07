@@ -44,7 +44,7 @@ export class Header {
     const header = document.createElement('header');
     const menuInst = new Menu();
 
-    header.classList.add(...['d-flex', 'justify-content-between', 'align-items-center']);
+    header.classList.add('header-footer');
     return util.appendMultipleChild(header, [
       this._createLogo(),
       menuInst.component,
@@ -86,7 +86,7 @@ export class Footer {
     const footer = document.createElement('footer');
     const menuInst = new Menu();
 
-    footer.classList.add(...['d-flex', 'justify-content-between', 'align-items-center']);
+    footer.classList.add('header-footer');
     return util.appendMultipleChild(footer, [
       menuInst.component,
       this._createCopyright()

@@ -234,18 +234,9 @@ export class BookmarkComponent {
     const bookmarkTableInst = new BookmarkTable(bookmarkData);
 
     return util.createWrap({
-      id: 'bookmarkTableWrap',
       classNames: [
         'card',
-        'w-70',
-        'mt-2',
-        'mb-2',
-        'mr-auto',
-        'ml-auto',
-        'pt-2',
-        'pb-2',
-        'pr-2',
-        'pl-2',
+        'component-wrap',
       ],
       innerElm: [bookmarkTableInst.component]
     });

@@ -32,7 +32,7 @@ class English {
   _create() {
     const english = document.createElement('span');
 
-    english.id = 'english';
+    english.classList.add('english');
     english.textContent = this._english;
     return english;
   }
@@ -68,7 +68,7 @@ class Answer {
   _createAnswersWrap() {
     const answersWrap = document.createElement('ul');
 
-    answersWrap.id = 'answersWrap';
+    answersWrap.classList.add('learning-answers-wrap');
     return util.appendMultipleChild(answersWrap,
       this._shuffleAnswer(this._answer.map(val => {
         return this._createAnswerItem(val);
@@ -191,9 +191,11 @@ class BookmarkButton extends Button {
    */
   constructor(englishId) {
     super({
-      id: 'bookmarkBtn',
       text: 'ブックマーク',
-      classNames: ['primary'],
+      classNames: [
+        'bookmark-btn',
+        'primary'
+      ],
       iconClassNames: [
         'fas',
         'fa-bookmark'
@@ -212,7 +214,7 @@ class BookmarkButton extends Button {
   _updateBookmarkFlag = async (e) => {
     const pkey = this._englishId;
     const flag = util.FLAG.true;
-    const bookmarkBtn = e.target.closest('#bookmarkBtn');
+    const bookmarkBtn = e.target.closest('.bookmark-btn');
 
     bookmarkBtn.classList.add(...['event-none', 'secondary']);
 
@@ -242,12 +244,10 @@ class NextButton extends Button {
    */
   constructor(learningData) {
     super({
-      id: 'nextBtn',
       text: '次へ',
       classNames: [
+        'next-btn',
         'primary',
-        'd-flex',
-        'align-items-center'
       ],
       iconClassNames: [
         'fas',
@@ -333,19 +333,10 @@ export class LearningComponent {
     const correctData = { id, correct };
 
     return util.createWrap({
-      id: 'learningWrap',
       classNames: [
         'card',
-        'w-70',
-        'mt-2',
-        'mb-2',
-        'mr-auto',
-        'ml-auto',
-        'pt-2',
-        'pb-2',
-        'pr-2',
-        'pl-2',
-        'tx-center'
+        'learning-wrap',
+        'component-wrap'
       ],
       innerElm: [
         this._createEnglish(english),
@@ -359,13 +350,8 @@ export class LearningComponent {
         util.createWrap({
           id: 'learningButtonWrap',
           classNames: [
-            'd-flex',
+            'learning-btn-wrap',
             'd-none',
-            'justify-content-between',
-            'mt-1',
-            'mb-1',
-            'mr-1',
-            'ml-1'
           ],
           innerElm: [
             this._createLeftBtnWrap(id, english, bookmark_flag),
@@ -416,14 +402,14 @@ export class LearningComponent {
 
     if (bookmarkFlag) {
       return util.createWrap({
-        classNames: ['btnWrap'],
+        classNames: ['btn-wrap'],
         innerElm: [pronounceButtonInst.component]
       });
     }
     const bookmarkButtonInst = new BookmarkButton(id);
 
     return util.createWrap({
-      classNames: ['btnWrap'],
+      classNames: ['btn-wrap'],
       innerElm: [
         pronounceButtonInst.component,
         bookmarkButtonInst.component

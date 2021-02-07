@@ -174,17 +174,13 @@ export class Menu {
    */
   _create() {
     return createWrap({
-      classNames: [
-        'menu-wrap',
-        'd-flex',
-        'justify-content-between'
-      ],
+      classNames: ['menu-wrap'],
       innerElm: MENUS.map(menuData => {
         const menu = document.createElement('div');
         const span = document.createElement('span');
         const menuIcon = document.createElement('i');
 
-        menu.classList.add(...['menu', 'cursor-pointer']);
+        menu.classList.add('menu');
         menu.addEventListener('click', menuData.renderComponent);
         span.textContent = menuData.text;
         menuIcon.classList.add(...menuData.iconClassNames);
@@ -527,7 +523,7 @@ export class Modal {
 
     buttonInst.setAddEventListener(this._btnEvent ? this._btnEvent : () => { location.href = '/'; });
     return createWrap({
-      classNames: ['btnWrap'],
+      classNames: ['btn-wrap'],
       innerElm: [buttonInst.component],
     });
   }

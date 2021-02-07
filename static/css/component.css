@@ -24,7 +24,6 @@ li {
     --green: #228B22;
     --vivid-green: #00CC00;
     --light-green: #E6FFE9;
-    --orange: #FF773E;
     --red: #dc143c;
     --pink: #FF3366;
     --light-pink: #FFD5EC;
@@ -47,6 +46,11 @@ h1 {
 h2 {
     font-size: 1.2rem;
 }
+.header-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 table {
     width: 100% !important;
 }
@@ -63,7 +67,7 @@ button:hover {
 button i {
     margin-right: 0.6rem;
 }
-.btnWrap button:not(:last-child) {
+.btn-wrap button:not(:last-child) {
     margin-right: 1rem;
 }
 .card {
@@ -72,32 +76,58 @@ button i {
     border-radius: 10px;
     border: 1px solid var(--gray);
 }
+.dash-activity-wrap li div:first-child,
+.activity-table-detail-wrap div:first-child {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    margin: 0 1rem 0 0;
+    border-radius: 50%;
+}
+.dash-activity-wrap li div:first-child i,
+.activity-table-detail-wrap div:first-child i {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1rem;
+}
+.activity-learning {
+    border: 1px solid var(--light-blue);
+    color: var(--light-blue);
+}
+.activity-english_list {
+    border: 1px solid var(--pink);
+    color: var(--pink);
+}
+.activity-bookmark {
+    border: 1px solid var(--green);
+    color: var(--green);
+}
+i.admin-btn-show {
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--base-tx);
+}
+i.admin-btn-show:hover {
+    transform: scale(1.05);
+    transition: all 300ms 0s ease;
+    color: var(--light-blue);
+    cursor: pointer;
+}
+.admin-btn-wrap button {
+    margin: 0.2rem 0;
+}
+.component-wrap {
+    width: 70%;
+    margin: 2rem auto;
+    padding: 2rem;
+}
 
 /* ----- util ----- */
 /* display */
 .d-none {
     display: none !important;
-}
-.d-flex {
-    display: flex;
-}
-
-/* justify-content */
-.justify-content-between {
-    justify-content: space-between;
-}
-.justify-content-around {
-    justify-content: space-around;
-}
-
-/* align-items */
-.align-items-center {
-    align-items: center;
-}
-
-/* flex-wrap */
-.flex-wrap {
-    flex-wrap: wrap;
 }
 
 /* button */
@@ -141,9 +171,6 @@ button.danger:hover {
 .w-30 {
     width: 30%;
 }
-.w-49 {
-    width: 49%;
-}
 .w-70 {
     width: 70%;
 }
@@ -154,18 +181,6 @@ button.danger:hover {
 }
 
 /* margin */
-.mr-auto {
-    margin-right: auto;
-}
-.ml-auto {
-    margin-left: auto;
-}
-.mt-05 {
-    margin-top: 0.5rem;
-}
-.mb-05 {
-    margin-bottom: 0.5rem;
-}
 .mr-05 {
     margin-right: 0.5rem;
 }
@@ -174,85 +189,6 @@ button.danger:hover {
 }
 .mt-1 {
     margin-top: 1rem;
-}
-.mb-1 {
-    margin-bottom: 1rem;
-}
-.mr-1 {
-    margin-right: 1rem;
-}
-.ml-1 {
-    margin-left: 1rem;
-}
-.mt-2 {
-    margin-top: 2rem;
-}
-.mb-2 {
-    margin-bottom: 2rem;
-}
-.mr-2 {
-    margin-right: 2rem;
-}
-.ml-2 {
-    margin-left: 2rem;
-}
-
-/* padding */
-.pt-05 {
-    padding-top: 0.5rem;
-}
-.pb-05 {
-    padding-bottom: 0.5rem;
-}
-.pr-05 {
-    padding-right: 0.5rem;
-}
-.pl-05 {
-    padding-left: 0.5rem;
-}
-.pt-1 {
-    padding-top: 1rem;
-}
-.pb-1 {
-    padding-bottom: 1rem;
-}
-.pr-1 {
-    padding-right: 1rem;
-}
-.pl-1 {
-    padding-left: 1rem;
-}
-.pt-2 {
-    padding-top: 2rem;
-}
-.pb-2 {
-    padding-bottom: 2rem;
-}
-.pr-2 {
-    padding-right: 2rem;
-}
-.pl-2 {
-    padding-left: 2rem;
-}
-.pt-4 {
-    padding-top: 4rem;
-}
-.pb-4 {
-    padding-bottom: 4rem;
-}
-.pr-4 {
-    padding-right: 4rem;
-}
-.pl-4 {
-    padding-left: 4rem;
-}
-
-/* font-size */
-.font-size-1 {
-    font-size: 1rem;
-}
-.font-size-2 {
-    font-size: 2rem;
 }
 
 /* cursor */
@@ -272,16 +208,22 @@ button.danger:hover {
 }
 
 /* ----- header footer ----- */
-header, footer {
+header,
+footer {
     background: var(--base-bg);
     padding: 0.6rem 4rem;
     color: var(--white);
 }
 
 /* menu */
+.menu-wrap {
+    display: flex;
+    justify-content: space-between;
+}
 .menu-wrap .menu {
     padding: 8px 9px 8px 9px;
     box-sizing: content-box;
+    cursor: pointer;
 }
 .menu-wrap .menu:not(:last-child) {
     margin-right: 1rem;
@@ -292,8 +234,25 @@ header, footer {
 }
 
 /* ----- dashboard ----- */
+.dash-first-wrap,
+.dash-second-wrap,
+.dash-second-left-top-wrap {
+    display: flex;
+    justify-content: space-between;
+}
+.dash-second-wrap {
+    flex-wrap: wrap;
+    margin: 2rem 0;
+}
+.dash-second-left-wrap,
+.dash-second-right-wrap,
+.dash-second-section {
+    width: 49%;
+}
+
 /* heading */
 .head-wrap {
+    margin-left: 1rem;
     padding: 0.8rem 0.6rem;
     border-bottom: 1px solid var(--gray);
 }
@@ -301,50 +260,75 @@ header, footer {
     font-size: 1.6rem;
 }
 
+/* total */
+.word-total-wrap,
+.bookmark-total-wrap {
+    padding: 1rem 2rem;
+    text-align: center;
+    font-size: 2rem;
+}
+.bookmark-total-wrap {
+    text-align: right;
+}
+
 /* learningRate */
-.learning-rate-shape-wrap span {
+.learning-rate-wrap {
+    display: flex;
+    align-items: center;
+    padding: 1rem 2rem 1rem;
+}
+.learning-rate-shape {
+    display: flex;
+}
+.learning-rate-shape span {
     display: block;
     width: 20px;
     height: 20px;
     margin-right: 0.6rem;
     border-radius: 50%;
 }
-#activityWrap li {
-    border-bottom: 1px solid var(--gray);
+.learning-rate-num {
+    text-align: center;
+    font-size: 2rem;
 }
-#activityWrap li:last-child {
-    border: none;
-}
-#activityWrap .learning, .activityTable-detail-wrap .learning {
-    border: 1px solid var(--light-blue);
-    color: var(--light-blue);
-}
-#activityWrap .english_list, .activityTable-detail-wrap .english_list {
-    border: 1px solid var(--pink);
-    color: var(--pink);
-}
-#activityWrap .bookmark, .activityTable-detail-wrap .bookmark {
-    border: 1px solid var(--green);
-    color: var(--green);
-}
-#activityWrap li div:first-child, .activityTable-detail-wrap div:first-child {
-    position: relative;
-    width: 50px;
-    height: 50px;
-    margin: 0 1rem 0 0;
-    border-radius: 50%;
-}
-#activityWrap li div:first-child i, .activityTable-detail-wrap div:first-child i {
-    position: absolute;
-    top: 45%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.small-unit-text {
+    margin-left: 0.5rem;
     font-size: 1rem;
 }
 
+/* activity */
+.dash-activity-wrap {
+    margin-top: 1rem;
+    padding: 0 2rem;
+}
+.dash-activity-wrap li {
+    border-bottom: 1px solid var(--gray);
+}
+.dash-activity-wrap li:last-child {
+    border: none;
+}
+.dash-activity-list {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+}
+
+/* learningLog */
+.learning-log-wrap {
+    padding: 1rem;
+}
+
 /* ----- learning ----- */
+.learning-wrap {
+    text-align: center;
+}
+.learning-btn-wrap {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem;
+}
 /* english */
-#learningWrap #english {
+.learning-wrap .english {
     padding-bottom: 0.6rem;
     border-bottom: 2px solid var(--light-blue);
     font-size: 1.8rem;
@@ -352,7 +336,7 @@ header, footer {
 }
 
 /* answers */
-#answersWrap li {
+.learning-answers-wrap li {
     position: relative;
     margin: 2.4rem 8rem;
     padding: 0.6rem;
@@ -362,57 +346,56 @@ header, footer {
     font-size: 1.4rem;
     cursor: pointer;
 }
-#answersWrap li:hover {
+.learning-answers-wrap li:hover {
     transform: scale(1.05);
     transition: all 300ms 0s ease;
     background: var(--light-blue);
     color: var(--white);
 }
-#answersWrap li.is-correct {
+.learning-answers-wrap li.is-correct {
     background: var(--light-green);
     border: 1px solid var(--vivid-green);
 }
-#answersWrap li.is-incorrect {
+.learning-answers-wrap li.is-incorrect {
     background: var(--light-pink);
     border: 1px solid var(--red);
 }
-#answersWrap li i {
+.learning-answers-wrap li i {
     position: absolute;
     top: 50%;
     left: 5%;
     transform: translateY(-50%);
     font-size: 2rem;
 }
-#answersWrap .fa-circle {
+.learning-answers-wrap .fa-circle {
     color: var(--vivid-green);  
 }
-#answersWrap .fa-times {
+.learning-answers-wrap .fa-times {
     color: var(--red);  
 }
 
 /* button */
-#nextBtn span {
+.next-btn {
+    display: flex;
+    align-items: center;
+}
+.next-btn span {
     margin-right: 0.6rem;
 }
-#nextBtn i {
+.next-btn i {
     order: 2;
     margin: 0;
 }
 
-/* ----- englishList ----- */
-i.admin-btn-show {
-    margin: 0;
-    font-size: 1.8rem;
-    color: var(--base-tx);
+/* ----- activity ----- */
+.activity-table-detail-wrap {
+    display: flex;
+    align-items: center;
 }
-i.admin-btn-show:hover {
-    transform: scale(1.05);
-    transition: all 300ms 0s ease;
-    color: var(--light-blue);
-    cursor: pointer;
-}
-.admin-btn-wrap button {
-    margin: 0.2rem 0;
+
+/* ----- register ----- */
+.register-form-wrap {
+    padding: 4rem;
 }
 .form-group {
     margin-bottom: 3rem;
@@ -471,16 +454,17 @@ body.modal-open {
 }
 
 @media screen and (max-width: 1024px) {
-    header, footer {
+    header,
+    footer {
         padding: 0.6rem 1rem;
     }
     button {
         padding: 0.5rem 0.3rem;
     }
-    #learningWrap, #englishListTableWrap, #bookmarkTableWrap, #activityTableWrap, #registerFormWrap {
+    .component-wrap {
         width: 80%;
     }
-    #activityWrap {
+    .dash-activity-wrap {
         margin-top: 0;
     }
 }
@@ -535,39 +519,40 @@ body.modal-open {
         padding: 0;
         border: 0;
     }
-    footer small {
+    footer small,
+    .admin-btn-wrap button span {
         display: none;
     }
-    #secondWrap {
+    .dash-second-wrap {
         display: block;
         margin-bottom: 1rem;
     }
-    #secondLeftWrap, #secondRightWrap, #secondLeftTopWrap {
+    .dash-second-left-wrap,
+    .dash-second-right-wrap,
+    .dash-second-left-top-wrap {
         width: 100%;
     }
-    #secondRightWrap {
+    .dash-second-right-wrap {
         margin-top: 1rem;
     }
-    #learningLogWrap {
+    .learning-log-wrap {
         padding: 1rem;
     }
-    #answersWrap li {
+    .learning-answers-wrap li {
         margin: 2.4rem 2rem;
     }
-    #englishListTableWrap button, #bookmarkTableWrap button {
+    .admin-btn-wrap button {
         padding: 1rem;
         border-radius: 50%;
     }
-    #englishListTableWrap button i, #bookmarkTableWrap button i {
+    .admin-btn-wrap button i {
         margin: 0;
     }
-    #englishListTableWrap button span, #bookmarkTableWrap button span {
-        display: none;
-    }
-    #registerFormWrap {
+    .register-form-wrap {
         padding: 4rem 2rem;
     }
-    #activityWrap li div:first-child, .activityTable-detail-wrap div:first-child {
+    .dash-activity-wrap li div:first-child,
+    .activity-table-detail-wrap div:first-child {
         width: 30px;
         height: 30px;
     }

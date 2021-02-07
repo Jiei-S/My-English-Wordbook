@@ -294,18 +294,9 @@ export class EnglishListComponent {
     const englishListTableInst = new EnglishListTable(englishListData);
 
     return util.createWrap({
-      id: 'englishListTableWrap',
       classNames: [
         'card',
-        'w-70',
-        'mt-2',
-        'mb-2',
-        'mr-auto',
-        'ml-auto',
-        'pt-2',
-        'pb-2',
-        'pr-2',
-        'pl-2',
+        'component-wrap',
       ],
       innerElm: [englishListTableInst.component]
     });

@@ -60,13 +60,13 @@ class ActivityTable {
             data: null,
             title: '詳細',
             render: (data) => {
-              let elm = `<div class="d-flex align-items-center activityTable-detail-wrap">`;
+              let elm = `<div class="activity-table-detail-wrap">`;
 
               MENUS.forEach(menu => {
                 if (menu.getComponentName() === data.type) {
                   const [a, b] = menu.iconClassNames;
 
-                  elm += `<div class="${data.type}"><i class="${a} ${b}"></i></div>`;
+                  elm += `<div class="activity-${data.type}"><i class="${a} ${b}"></i></div>`;
                   return false;
                 }
                 return true;
@@ -161,18 +161,9 @@ export class ActivityComponent {
     const activityTableInst = new ActivityTable(activityData);
 
     return util.createWrap({
-      id: 'activityTableWrap',
       classNames: [
         'card',
-        'w-70',
-        'mt-2',
-        'mb-2',
-        'mr-auto',
-        'ml-auto',
-        'pt-2',
-        'pb-2',
-        'pr-2',
-        'pl-2',
+        'component-wrap'
       ],
       innerElm: [activityTableInst.component]
     });
